@@ -140,7 +140,7 @@ div.dataTables_scrollBody {
 
 `BOLD.NODE` (**N**o-API **O**ffline **D**ata **E**xplorer) is a sister package to `BOLDconnectR` that provides local access to BOLD data packages through DuckDB, enabling exploration and analysis of public BOLD data without API limitations. `BOLD.NODE` therefore, offers an offline solution for working with large scale BOLD datasets locally. Please refer to the package documentation <https://github.com/sameerpadhye/BOLD.NODE> for more details about the package.
 
-This vignette demonstrates a complete workflow integrating the *search*, *collect*, *get_* and *bcdm_to* functions in `BOLD.NODE` for efficient and scalable exploration of BOLD data packages. 
+This vignette demonstrates a complete workflow integrating the *search*, *collect*, *get\_* and *bcdm_to* functions in `BOLD.NODE` for efficient and scalable exploration of BOLD data packages.
 
 As a case study, we use Canadian **Cerambycidae** (longhorn beetles) to illustrate how these functions can be combined to search, retrieve, and transform the BCDM data.
 
@@ -157,7 +157,7 @@ As a case study, we use Canadian **Cerambycidae** (longhorn beetles) to illustra
 
 # Practical Workflow
 
-## Installing and importing `BOLD.NODE` and other packages 
+## Installing and importing `BOLD.NODE` and other packages
 
 The latest (in development) version of `BOLD.NODE` can be installed via `pak`. Packages like `Biostrings` and `muscle` require `BiocManager` since they are hosted by **Bioconductor**.
 
@@ -221,7 +221,7 @@ invisible(lapply(
 
 ## Data packages
 
-BOLD data packages can be downloaded in the `parquet` format from the BOLD website (<https://boldsystems.org/data/data-pacakges/>). Historical Data of quarterly BOLD snapshots (each assigned a stable DOI to support reproducible research) can also be accessed by scrolling down the same webpage. 
+BOLD data packages can be downloaded in the `parquet` format from the BOLD website (<https://boldsystems.org/data/data-pacakges/>). Historical Data of quarterly BOLD snapshots (each assigned a stable DOI to support reproducible research) can also be accessed by scrolling down the same webpage.
 
 ## Data package import
 
@@ -297,7 +297,7 @@ DT::datatable(cerambycidae_summary)
 
 ### 4. Compute BIN consensus taxonomy
 
-`get_bin_consensus` computes the consensus taxonomic identifications for each BIN in the Cerambycidae dataset. The function works upwards through taxonomic ranks to find the lowest concordant identification that satisfies the provided threshold (*Please note that only first 50 results are shown here*).
+`get_bin_consensus` computes the consensus taxonomic identifications for each BIN in the Cerambycidae dataset. The function works upwards through taxonomic ranks (i.e., from subspecies to kingdom) to find the lowest concordant identification that satisfies the provided threshold (*Please note that only first 50 results are shown here*).
 
 ```{r step4-bin-consensus,message=F,warning=F}
 # Get BIN consensus with strict consensus threshold (1.0)
@@ -320,6 +320,7 @@ DT::datatable(head(bin_consensus, 50),
 ```
 
 ### 5. Obtain a BIN-by-province occurrence matrix for all cerambycids
+
 `bcdm_to_occmatrix` creates a `site-by-taxon` occurrence matrix from the full Cerambycidae dataset, using **province.state** as the geographic grouping variable and **species** as the taxonomic rank (*Please note only 20 species are shown here*).
 
 ```{r step5-occurrence-matrix,message=F,warning=F}
@@ -340,16 +341,20 @@ DT::datatable(
   )
 )
 ```
+
 *The resulting occurrence matrix can be directly used as input data for many functions in widely used packages like* `vegan`.
 
 #### 5a. Species richness estimate (using external package `vegan`)
+
 ```{r vegan-example-richness,message=F,warning=F}
 species_richness_est <- poolaccum(occ_matrix)
 species_richness_est
 ```
+
 *Species based richness estimates*
 
 #### 5b. Beta diversity between the provinces (using external package `vegan`)
+
 ```{r column-to-rowname, include=F,message=F,warning=F}
 occ_matrix <- occ_matrix %>%
   column_to_rownames("province.state")
@@ -368,9 +373,11 @@ DT::datatable(
   )
 )
 ```
+
 *Pairwise Bray Curtis dissimilarity between the provinces*
 
 #### 5c. Using Non Metric Multidimensional Scaling for visualizing the pairwise distances between provinces (using external packages `vegan` & `ggplot2`)
+
 ```{r nMDS,,message=F,warning=F,fig.width=12, fig.height=12, dpi=300}
 # Using the occurrence matrix generated above for nMDS
 nmds <- metaMDS(
@@ -423,10 +430,12 @@ ggplot() +
     y = "NMDS2"
   )
 ```
+
 *A nMDS plot showing the associations between cerambycid species and provinces (Only 40 species shown here for representation)*
 
 ### 6. Select representative records for each BIN
-`get_bin_reps` sub-samples the search results by BIN and selects representative records according to the provided criteria, yielding a representative sample for downstream analyses. As we saw above, some BINs include multiple species, therefore we will select representatives for all BIN-taxon combinations. Here, we select up to three records per BIN, prioritizing 658-bp sequences from specimens identified via morphological examination.
+
+`get_bin_reps` sub-samples the search results by BIN and selects representative records according to the provided criteria, yielding a representative sample for downstream analyses. As we saw above, some BINs include multiple species, therefore we will select representatives for all BIN-taxon combinations. Here, we select up to three records per BIN, prioritizing 658-bp sequences from specimens identified via morphological examination. With `enforce.scientific = TRUE`, interim or provisional names are ignored as distinct taxa (e.g. "Sternidius sp. A" is treated the same as "Sternidius").
 
 ```{r step5-bin-reps,message=F,warning=F}
 # Sample 3 records per BIN-taxon combination
@@ -449,7 +458,9 @@ cat(
   "(out of", tot_records, "total records)."
 )
 ```
+
 The actual number of sampled records varies according to BIN size and taxonomy, as we can see in the collected results (*Please note only 50 records are shown here*). In the case of BINs with multiple species, further analysis of barcode sequences often reveals small but consistent differences between them.
+
 ```{r step5-bin-rep-DT,message=F,warning=F}
 DT::datatable(
   head(bin_reps, 50),
@@ -461,7 +472,9 @@ DT::datatable(
 ```
 
 ### 7. Generate a DNAStringset object for the genus *Clytus*
+
 `bcdm_to_dnastringset` converts the search results into a `DNAStringSet` object. First, `bold_parquet_search` is used to filter the COI-5P *Clytus* records from Canada. Additional search parameters are put in to return only full length barcodes having very low (or none) ambiguous bases (**Only top three results displayed**) (*Please note: The* `bcdm_to_dnastringset` *function requires* `Biostrings` *to be installed before use*).
+
 ```{r DNAStringSet-object,message=F,warning=F}
 # Filter for genus Clytus
 clytus_search <- bold_parquet_search(
@@ -479,9 +492,11 @@ clytus_data <- bcdm_to_dnastringset(clytus_search,
 )
 head(clytus_data, 3)
 ```
-*The* `DNAStringSet` *object can then be used in various downstream analyses using packages like* `Biostrings`, `muscle`, `ape` *etc.* 
 
-#### 7a. Obtaining a base level proportion in the sequences (using external package `Biostrings`)
+*The* `DNAStringSet` *object can then be used in various downstream analyses using packages like* `Biostrings`, `muscle`, `ape` *etc.*
+
+#### 7a. Obtain base proportions from the sequences (using external package `Biostrings`)
+
 ```{r basepair-freq,message=F,warning=F}
 # Count bases across all sequences
 base_counts <- colSums(alphabetFrequency(clytus_data, baseOnly = TRUE))
@@ -491,11 +506,13 @@ base_props
 ```
 
 #### 7b. Multiple sequence alignment using 'Muscle' (using external packages `muscle` and `Biostrings`)
+
 ```{r sequence_alignment,message=F,warning=F}
 alignment_muscle <- muscle(clytus_data)
 ```
 
 ##### 7c. NJ tree visualization of the alignment (using external package `ape` and `phangorn`)
+
 ```{r NJ tree,message=F,warning=F,fig.width=12, fig.height=12, dpi=300}
 # Convert the alignment to DNABin
 dna_bin <- as.DNAbin(alignment_muscle)
@@ -519,9 +536,11 @@ plot(
   main = "Neighbor-Joining Tree"
 )
 ```
+
 *A simple NJ tree visualization of the aligned data*
 
-### 8. Generate a `sf` object for spatial mapping of occurrences of the genus *Monochamus*ß
+### 8. Generate a `sf` object for spatial mapping of occurrences of the genus *Monochamus*
+
 ```{r sf_object}
 # Filter for genus Monochamus
 monochamus_search <- bold_parquet_search(
@@ -536,6 +555,7 @@ monochamus_data <- bcdm_to_sf(monochamus_search)
 ```
 
 The `sf` object can be used directly for mapping occurrences with external packages like `ggplot2`.
+
 ```{r occurrence-map,message=F,warning=F}
 # Creating a background map using the maps package; some map_data country names (ID column) are changed to suit the BCDM country.ocean names
 map_data <- sf::st_as_sf(maps::map("world",
@@ -579,20 +599,23 @@ map_plot <- ggplot() +
 
 map_plot
 ```
+
 *Occurrence map of Monochamus*
 
 # Performance and Integration Notes
 
 ## Benchmarking
+
 Benchmarking used three representative queries:
 
-1. ~1 million records (taxonomy = "Hemiptera")
-2. ~4.5 million records (taxonomy = "Diptera", geography = "Costa Rica")
-3. ~10 million records (taxonomy = "Diptera")
+1.  \~1 million records (taxonomy = "Hemiptera")
+2.  \~4.5 million records (taxonomy = "Diptera", geography = "Costa Rica")
+3.  \~10 million records (taxonomy = "Diptera")
 
 Search (`bold_parquet_search`) and data retrieval (`bold_search_collect`) were benchmarked separately using the `rbenchmark` package with three replications on the *30th June 2026 data releaseß*(<https://doi.org/10.5883/DP-BOLD_Public.30-Jun-2026>). Tests were run on a *MacBook Air M2 (8-core CPU, 16 GB RAM)*. Across the three datasets, `bold_parquet_search` completed in 1.1 - 1.3s, while `bold_search_collect` required approximately 4 - 12 min, with runtime increasing as dataset size increased.
 
 `BOLD.NODE` can efficiently search and retrieve very large datasets; however, the data retrieval (`collect`) step is constrained by the user's available system memory, and collecting very large query results may exceed the machine's memory capacity.
 
 ## Integration with `BOLDconnectR`
+
 Functions from BOLD.NODE can be combined with the analysis functions from the `BOLDconnectR` package because BOLD data packages are based on the **Barcode Core Data Model (BCDM)** (<https://github.com/boldsystems-central/BCDM>). This shared data structure enables direct interoperability between packages without requiring additional data conversion.
