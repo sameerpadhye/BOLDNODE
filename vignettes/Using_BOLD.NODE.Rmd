@@ -221,7 +221,7 @@ invisible(lapply(
 
 ## Data packages
 
-BOLD data packages can be downloaded in the `parquet` format from the BOLD website (<https://boldsystems.org/data/data-pacakges/>). Historical Data of quarterly BOLD snapshots (each assigned a stable DOI to support reproducible research) can also be accessed by scrolling down the same webpage.
+BOLD data packages can be downloaded in the `parquet` format from the BOLD website (<https://boldsystems.org/data/data-packages/>). Historical Data of quarterly BOLD snapshots (each assigned a stable DOI to support reproducible research) can also be accessed by scrolling down the same webpage.
 
 ## Data package import
 
