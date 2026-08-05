@@ -2,7 +2,7 @@
 % Please edit documentation in R/external.bcdm_to_sf.R
 \name{bcdm_to_sf}
 \alias{bcdm_to_sf}
-\title{Convert the BOLD parquet search to simple features dataframe}
+\title{Convert the BOLD parquet search into a simple features dataframe}
 \usage{
 bcdm_to_sf(bold.search.res, chunk.size = 1e+05)
 }
@@ -12,10 +12,10 @@ bcdm_to_sf(bold.search.res, chunk.size = 1e+05)
 \item{chunk.size}{Number of records to process in each chunk (default: 100000).}
 }
 \value{
-An \code{sf} object with point geometry in WGS84 coordinate system (EPSG:4326).
+An \code{sf} object with point geometry in the WGS84 coordinate reference system (EPSG:4326).
 }
 \description{
-Converts BOLD search results with coordinate data to spatial points (sf object).
+Converts BOLD search results with coordinate data to a simple features dataframe with point geometry (sf object).
 }
 \details{
 This function transforms the search results from \code{bold_parquet_search} into an \code{sf} object. A data chunking  option is available to manage large sizes to avoid memory issues. The function creates point geometries in the WGS84 coordinate system (EPSG:4326). Records that don't have coordinate data are removed during processing.

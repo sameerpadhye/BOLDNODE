@@ -9,7 +9,7 @@
 #' @param fas.header Character vector of field names to include in the FASTA header.
 #' @param chunk.size Number of records to process in each chunk (default: 1000000).
 #'
-#' @return writes a FASTA file to disk with custom headers as specified by the user.
+#' @return Writes a FASTA file to disk with custom headers as specified by the user.
 #'
 #' @importFrom dplyr select filter mutate compute collect
 #' @importFrom dbplyr sql

@@ -31,7 +31,7 @@ get_bin_reps(
 
 \item{enforce.scientific}{Logical value indicating whether to ignore non-scientific, provisional names for the purposes of sampling representatives by taxon. Ignored if \code{by.taxon} is \code{FALSE}. (See 'Sampling representatives by taxon' for more details.)}
 
-\item{non.redundant.taxa}{Logical value indicating whether to select representatives at the lowest available rank from each distinct taxonomic lineage when sampling by taxon. For example, the identifications "Apidae", "Bombus", and "Bombus terrestris" are considered to belong to a single taxonomic lineage, and records assigned to "Bombus terrestris" will be selected first. Ignored if \code{by.taxon} is \code{FALSE}. (See 'Sampling representatives by taxon' for more details.)}
+\item{non.redundant.taxa}{Logical value, when sampling by taxon (by.taxon = TRUE), representatives are selected from the lowest available taxonomic rank within each lineage. For example, the identifications "Apidae", "Bombus", and "Bombus terrestris" are considered to belong to a single taxonomic lineage, and records assigned to "Bombus terrestris" will be selected first. Ignored if \code{by.taxon} is \code{FALSE}. (See 'Sampling representatives by taxon' for more details.)}
 
 \item{criteria}{Named list of selection criteria to apply when sampling representatives, given in priority order. See 'Criteria' for more information and default values.}
 

@@ -1,15 +1,15 @@
 #' Extract unique values from BCDM fields in the BOLD data package
 #'
-#' @description Extracts distinct values of specified field/s in the BOLD parquet data.
+#' @description Extracts distinct values of specified field(s) from the BOLD parquet data.
 #'
-#' @details This function extracts unique values from one or more specified columns in BOLD parquet data. It handles both the parquet file and `tbl_sql` objects from `bold_parquet_search` as input. The results can be saved to disk as an `.rds` file for later use.
+#' @details This function extracts unique values from one or more specified columns from the BOLD parquet data. It handles both the parquet file and `tbl_sql` objects from `bold_parquet_search` as input. The results can be saved to disk as an `.rds` file for later use.
 #'
 #' @param input.data Path to the input parquet file or the `bold_parquet_search` result.
 #' @param specific.cols Name of the column to extract unique values from.
 #' @param save.data Logical value indicating whether to save the results to disk as a .rds file (default: FALSE).
 #' @param output.file Path (without extension) for saving results as .rds file (required if save.data = TRUE).
 #'
-#' @return A list containing unique values from the specified column. if `save.data` = T, a `.rds` file is exported locally.
+#' @return A list containing unique values from the specified column. If `save.data` = T, a `.rds` file is exported locally.
 #'
 #' @importFrom dplyr filter distinct collect %>%
 #' @importFrom rlang .data
@@ -53,7 +53,7 @@ bcdm_field_values <- function(
       dplyr::collect() %>%
       dplyr::pull(.data[[col]])
   })
- # Name the elements of the list as per the column names specified in the specific.cols argument
+  # Name the elements of the list as per the column names specified in the specific.cols argument
   names(terms_list) <- specific.cols
   # Save RDS file locally
   if (save.data) {

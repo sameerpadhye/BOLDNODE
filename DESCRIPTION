@@ -28,14 +28,19 @@ Imports:
     sf,
     tidyr
 Suggests:
+    ape,
     Biostrings,
     BiocManager,
     knitr,
     rmarkdown,
     DT,
     ggplot2,
+    ggrepel,
     maps,
+    muscle,
     pak,
+    phangorn,
+    tibble,
     vegan
 Config/roxygen2/version: 8.0.0
 RoxygenNote: 7.3.3

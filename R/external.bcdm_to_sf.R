@@ -1,13 +1,13 @@
-#' Convert the BOLD parquet search to simple features dataframe
+#' Convert the BOLD parquet search into a simple features dataframe
 #'
-#' @description Converts BOLD search results with coordinate data to spatial points (sf object).
+#' @description Converts BOLD search results with coordinate data to a simple features dataframe with point geometry (sf object).
 #'
 #' @details This function transforms the search results from `bold_parquet_search` into an `sf` object. A data chunking  option is available to manage large sizes to avoid memory issues. The function creates point geometries in the WGS84 coordinate system (EPSG:4326). Records that don't have coordinate data are removed during processing.
 #'
 #' @param bold.search.res A tbl_sql object containing BOLD search results.
 #' @param chunk.size Number of records to process in each chunk (default: 100000).
 #'
-#' @return An `sf` object with point geometry in WGS84 coordinate system (EPSG:4326).
+#' @return An `sf` object with point geometry in the WGS84 coordinate reference system (EPSG:4326).
 #'
 #' @importFrom dplyr filter mutate select collect
 #' @importFrom sf st_as_sf

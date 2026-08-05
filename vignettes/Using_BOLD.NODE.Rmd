@@ -159,66 +159,20 @@ As a case study, we use Canadian **Cerambycidae** (longhorn beetles) to illustra
 
 ## Installing and importing `BOLD.NODE` and other packages
 
-The latest (in development) version of `BOLD.NODE` can be installed via `pak`. Packages like `Biostrings` and `muscle` require `BiocManager` since they are hosted by **Bioconductor**.
+The latest (in development) version of `BOLD.NODE` can be installed via `pak`. Packages like `Biostrings` require `BiocManager` since they are hosted by **Bioconductor**.
 
-```{r install packages,message=F,warning=F,echo=FALSE}
+```{r install packages,message=F,warning=F,echo=FALSE,include=F}
 # CRAN packages
-cran_packages <- c(
-  "DT",
-  "dplyr",
-  "tidyr",
-  "ape",
-  "phangorn",
-  "ggplot2",
-  "ggrepel",
-  "sf",
-  "vegan",
-  "tibble",
-  "pak"
-)
-
-# Bioconductor packages
-bioc_packages <- c(
-  "Biostrings",
-  "muscle"
-)
-
-# Install BiocManager if needed
-if (!requireNamespace("BiocManager", quietly = TRUE)) {
-  install.packages("BiocManager")
-}
-
-# Install missing CRAN packages
-cran_missing <- cran_packages[
-  !vapply(cran_packages, requireNamespace, logical(1), quietly = TRUE)
-]
-
-if (length(cran_missing) > 0) {
-  install.packages(cran_missing)
-}
-
-# Install missing Bioconductor packages
-bioc_missing <- bioc_packages[
-  !vapply(bioc_packages, requireNamespace, logical(1), quietly = TRUE)
-]
-
-if (length(bioc_missing) > 0) {
-  BiocManager::install(bioc_missing, ask = FALSE, update = FALSE)
-}
-
-# Install BOLD.NODE from GitHub
-if (!requireNamespace("BOLD.NODE", quietly = TRUE)) {
-  pak::pkg_install("sameerpadhye/BOLD.NODE")
-}
-
-# Load all packages
-invisible(lapply(
-  c("BOLD.NODE", cran_packages, bioc_packages),
-  library,
-  character.only = TRUE
-))
+library(BOLD.NODE)
+library(dplyr)
+library(ggplot2)
+library(tibble)
+library(tidyr)
 ```
 
+```{r package_install_for_vignette,message=F,warning=F,echo=FALSE}
+# library(BOLD.NODE)
+```
 ## Data packages
 
 BOLD data packages can be downloaded in the `parquet` format from the BOLD website (<https://boldsystems.org/data/data-packages/>). Historical Data of quarterly BOLD snapshots (each assigned a stable DOI to support reproducible research) can also be accessed by scrolling down the same webpage.
@@ -234,7 +188,12 @@ The path where the file is downloaded is saved as a variable that can be used as
 
 ```{r setup-parquet,include=F}
 # Path to the downloaded BOLD Parquet release file
-parquet_file <- "/Users/sameerpadhye/Desktop/R data/Data/BOLD_Public.03-Jul-2026.parquet"
+
+parquet_file <- system.file(
+  "extdata",
+  "test_data.parquet",
+  package = "BOLD.NODE"
+)
 ```
 
 ### 1. Search from the data package
@@ -347,6 +306,7 @@ DT::datatable(
 #### 5a. Species richness estimate (using external package `vegan`)
 
 ```{r vegan-example-richness,message=F,warning=F}
+library(vegan)
 species_richness_est <- poolaccum(occ_matrix)
 species_richness_est
 ```
@@ -379,6 +339,7 @@ DT::datatable(
 #### 5c. Using Non Metric Multidimensional Scaling for visualizing the pairwise distances between provinces (using external packages `vegan` & `ggplot2`)
 
 ```{r nMDS,,message=F,warning=F,fig.width=12, fig.height=12, dpi=300}
+library(ggrepel)
 # Using the occurrence matrix generated above for nMDS
 nmds <- metaMDS(
   occ_matrix,
@@ -476,6 +437,7 @@ DT::datatable(
 `bcdm_to_dnastringset` converts the search results into a `DNAStringSet` object. First, `bold_parquet_search` is used to filter the COI-5P *Clytus* records from Canada. Additional search parameters are put in to return only full length barcodes having very low (or none) ambiguous bases (**Only top three results displayed**) (*Please note: The* `bcdm_to_dnastringset` *function requires* `Biostrings` *to be installed before use*).
 
 ```{r DNAStringSet-object,message=F,warning=F}
+library(Biostrings)
 # Filter for genus Clytus
 clytus_search <- bold_parquet_search(
   input.parquet = parquet_file,
@@ -498,6 +460,7 @@ head(clytus_data, 3)
 #### 7a. Obtain base proportions from the sequences (using external package `Biostrings`)
 
 ```{r basepair-freq,message=F,warning=F}
+library(Biostrings)
 # Count bases across all sequences
 base_counts <- colSums(alphabetFrequency(clytus_data, baseOnly = TRUE))
 # Proportions
@@ -508,12 +471,16 @@ base_props
 #### 7b. Multiple sequence alignment using 'Muscle' (using external packages `muscle` and `Biostrings`)
 
 ```{r sequence_alignment,message=F,warning=F}
+library(Biostrings)
+library(muscle)
 alignment_muscle <- muscle(clytus_data)
 ```
 
 ##### 7c. NJ tree visualization of the alignment (using external package `ape` and `phangorn`)
 
 ```{r NJ tree,message=F,warning=F,fig.width=12, fig.height=12, dpi=300}
+library(ape)
+library(phangorn)
 # Convert the alignment to DNABin
 dna_bin <- as.DNAbin(alignment_muscle)
 
@@ -554,11 +521,12 @@ monochamus_search <- bold_parquet_search(
 monochamus_data <- bcdm_to_sf(monochamus_search)
 ```
 
-The `sf` object can be used directly for mapping occurrences with external packages like `ggplot2`.
+The `sf` object can be used directly for mapping occurrences with external packages like `ggplot2`. (Background maps can be created in many ways. The `sf` library has been used in this case).
 
 ```{r occurrence-map,message=F,warning=F}
+library(sf)
 # Creating a background map using the maps package; some map_data country names (ID column) are changed to suit the BCDM country.ocean names
-map_data <- sf::st_as_sf(maps::map("world",
+map_data <- st_as_sf(maps::map("world",
   plot = FALSE,
   fill = TRUE
 )) %>%

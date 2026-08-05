@@ -21,13 +21,13 @@ bcdm_field_values(
 \item{output.file}{Path (without extension) for saving results as .rds file (required if save.data = TRUE).}
 }
 \value{
-A list containing unique values from the specified column. if \code{save.data} = T, a \code{.rds} file is exported locally.
+A list containing unique values from the specified column. If \code{save.data} = T, a \code{.rds} file is exported locally.
 }
 \description{
-Extracts distinct values of specified field/s in the BOLD parquet data.
+Extracts distinct values of specified field(s) from the BOLD parquet data.
 }
 \details{
-This function extracts unique values from one or more specified columns in BOLD parquet data. It handles both the parquet file and \code{tbl_sql} objects from \code{bold_parquet_search} as input. The results can be saved to disk as an \code{.rds} file for later use.
+This function extracts unique values from one or more specified columns from the BOLD parquet data. It handles both the parquet file and \code{tbl_sql} objects from \code{bold_parquet_search} as input. The results can be saved to disk as an \code{.rds} file for later use.
 }
 \examples{
 \dontrun{

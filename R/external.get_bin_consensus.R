@@ -15,17 +15,15 @@
 #' or a BCDM data frame. Alternatively, it can be any data frame or data table minimally containing `bin_uri`
 #' (or other grouping variable) and taxonomic identifications for all available records.
 #'
-#' **Important Note**: As this function performs operations on the input data, it may be quite slow for very
-#' large data sets and/or weaker machines. Please check the size of `bold.search.res` input objects
-#' using \code{\link{get_concise_summary}} and proceed with caution.
+#' **Important Note**: This function performs operations on the input data and may be slow when applied to very large datasets or run on systems with limited      #' resources. Before using this function, check the size of the `bold.search.res`object using \code{\link{get_concise_summary}} and proceed with caution.
 #'
 #' @param bold.search.res A `tbl_sql` object obtained from \code{\link{bold_parquet_search}} or a data frame or data table in BCDM format.
 #' @param ranks A character vector of ranks to consider for consensus identifications. Defaults to the standard BOLD ranks.
-#' @param threshold Numeric value(s) between 0 and 1 indicating the minimum proportion of records in a BIN that must have a concordant identification in order to establish a consensus. Supply as a single value, a vector of length equal to the number of ranks in consideration, or a named list with names corresponding to ranks. If supplied as a named list, an optional "default" value can be set for any ranks that are not explicitly specified (e.g., \code{threshold = list(species = 0.95, default = 0.75)}). Default value is 1.0 (i.e., strict consensus at all ranks).
-#' @param min.ids Numeric value(s) indicating the minimum number of identifications needed to establish a consensus (names with fewer identifications are still included when calculating proportions). Supply as a single value, a vector of length equal to the number of ranks in consideration, or a named list with names corresponding to ranks. If supplied as a named list, an optional "default" value can be set for any ranks that are not explicitly specified (e.g., \code{min.ids = list(family = 1, default = 2)}). Default value is 2 (i.e., min 2 identifications at any rank).
+#' @param threshold Numeric value(s) between 0 and 1 indicating the minimum proportion of records in a BIN that must must share the same taxonomic assignment to establish a consensus. Supply as a single value, a vector with length equal to the number of taxonomic ranks considered, or a named list with names corresponding to specific ranks. If supplied as a named list, an optional "default" value can be set for any ranks that are not explicitly specified (e.g., \code{threshold = list(species = 0.95, default = 0.75)}). The default is 1.0 requiring complete agreement among records at all ranks.
+#' @param min.ids Numeric value(s) indicating the minimum number of identifications needed to establish a consensus (names with fewer identifications are still included when calculating proportions). Supply as a single value, a vector with length equal to the number of taxonomic ranks in consideration, or a named list with names corresponding to specific ranks. If supplied as a named list, an optional "default" value can be set for any ranks that are not explicitly specified (e.g., \code{min.ids = list(family = 1, default = 2)}). The default is 2, requiring a minimum of two identifications at any rank.
 #' @param enforce.scientific A logical value indicating whether non-scientific, provisional names should be ignored when determining consensus. Default value is TRUE, meaning non-scientific names are ignored.
 #' @param groups Grouping variable. Default value is "bin_uri".
-#' @param discord.format String indicating the desired output format for the `discordant_ids` column. Can be one of "text", or "list". If "text" (the default), the output is a string column with comma-separated values in the format "Taxon (proportion)". If "list", the output is a list column with names indicating competing identifications and values indicating proportions of discordant identifications for each taxon.
+#' @param discord.format String indicating the desired output format for the `discordant_ids` column. Can be one of "text" or "list". If "text" (the default), the output is a string column with comma-separated values in the format "Taxon (proportion)". If "list", the output is a list column with names indicating competing identifications and values indicating proportions of discordant identifications for each taxon.
 #'
 #' @returns A table of consensus identifications for each BIN (or other grouping variable), with the following columns:
 #'    `bin_uri`, `member_count`, `concordant_rank`, `concordant_id`, `discordant_rank`, `discordant_ids`.
@@ -78,7 +76,7 @@ get_bin_consensus <- function(
 ) {
   # Check input format
   is_tbl_sql <- isTRUE(try(check.tbl.sql(bold.search.res), silent = TRUE))
-  if(!is_tbl_sql && !is.data.frame(bold.search.res)) stop("`bold.search.res` must be either a bold_parquet_search output (tbl_sql / dbplyr table) or a data frame / data table.")
+  if (!is_tbl_sql && !is.data.frame(bold.search.res)) stop("`bold.search.res` must be either a bold_parquet_search output (tbl_sql / dbplyr table) or a data frame / data table.")
   # Check parameters
   stopifnot(
     "One or more provided `ranks` is/are missing from `bold.df`." = all(ranks %in% colnames(bold.search.res)),

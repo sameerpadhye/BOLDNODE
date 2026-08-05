@@ -31,11 +31,11 @@ bold_parquet_search(
 
 \item{bins}{Vector of BIN numbers (i.e., URIs) used to filter records.}
 
-\item{scope.taxonomy}{Character value specifying the kingdom (includes "all", "Animalia", "Plantae", "Protista", "Fungi", "Bacteria") (default: NULL).}
+\item{scope.taxonomy}{Character value specifying the kingdom. Values include "all", "Animalia", "Plantae", "Protista", "Fungi", "Bacteria" (default: NULL).}
 
-\item{taxonomy}{Vector of taxonomic names to filter by (includes "kingdom", "phylum", "class", "order", "family", "subfamily","genus", "species").}
+\item{taxonomy}{Vector of taxonomic names to filter by. Values include "kingdom", "phylum", "class", "order", "family", "subfamily","genus", "species" (default: NULL).}
 
-\item{scope.geography}{A single character value specifying the geographic hierarchy level to search within (includes "any", "country.ocean", "province.state", "region", "sector", "site"; default: "any")}
+\item{scope.geography}{A character string specifying the geographic hierarchy level for a search. Values include "any", "country.ocean", "province.state", "region", "sector", "site" (default: "any").}
 
 \item{geography}{Vector of geographic locations to filter by based on the \code{scope.geography}.}
 
@@ -49,24 +49,24 @@ bold_parquet_search(
 
 \item{basecount}{Nucleotide base count filter - either a single value or a vector of two values for a range.}
 
-\item{biogeo.cat}{Vector of biogeographic/ecological categories to filter by (biome, realm, or ecoregion).}
+\item{biogeo.cat}{Character vector of biogeographic or ecological categories for filter by, such as a biome, realm, or ecoregion.}
 
 \item{dataset.projects}{Vector of dataset/project codes used to filter records.}
 
 \item{bounding.box}{Numeric vector of length 4: c(min_lon, max_lon, min_lat, max_lat).}
 
-\item{ambi.base.cutoff}{Character value for filtering data based proportion of ambiguous bases (IUPAC codes). Three values currently available ("<1\%", "1-5\%", or ">5\%") (default: NULL).}
+\item{ambi.base.cutoff}{Character value for filtering data based proportion of ambiguous bases (IUPAC codes). Valid values are "<1\%", "1-5\%", and ">5\%" (default: NULL).}
 
 \item{specific.cols}{Optional character vector of specific columns to return.}
 }
 \value{
-A \code{tbl_sql} object containing the filtered data. Total records in the search are printed on the console.
+A \code{tbl_sql} object containing the filtered data. The total number of records matching the search criteria is printed to the console.
 }
 \description{
 Query records in BOLD parquet data packages using taxonomic, geographic, and other search criteria.
 }
 \details{
-This function loads the BOLD public data packages parquet files (\url{https://boldsystems.org/data/data-packages/}) via DuckDB and applies filters based on the provided parameters. It supports filtering by ids (sampleid, processid), taxonomy (using combination of scope.taxonomy and taxonomy), geography (using combination of scope.geography and geography), biogeography (biome to ecoregion level), BINs, institutes, identifiers, sequence sources, genetic markers, nucleotide base counts, dataset or projects, spatial bounding boxes, and ambiguous base percent cutoffs. The taxonomy and geography filters use a two-level scoping system that allows users to define \code{scope.taxonomy} and \code{scope.geography} to control how records are filtered. This is particularly useful when the same name exists at multiple geographic or taxonomic levels. For example, the name Azerbaijan may refer to a country, but a region with the same name also exists in Iran. If \code{scope.geography} is set to \code{any}, records from both geographic levels will be returned. However, setting \code{scope.geography} to \code{country.ocean} restricts the search to country records only, returning records associated with the country of Azerbaijan. A similar situation can occur with taxonomic names where identical names are assigned to different groups. For example, the genus Iris occurs in both plants and animals. Using \code{scope.taxonomy} allows users to specify the desired taxonomic context and avoid ambiguity between groups. Users can also specify particular columns to return using the \code{specific.cols} parameter (column names can be checked using the \code{bcdm_field_names} function). The \code{tbl_sql} object can then be used by any of the \verb{bcdm_to_*} functions for data transformations or \code{bold_search_collect} to load all the data in memory.
+This function loads the BOLD public data package parquet files (\url{https://boldsystems.org/data/data-packages/}) via DuckDB and applies filters based on the provided parameters. It supports filtering by ids (sampleid, processid), taxonomy (using a combination of scope.taxonomy and taxonomy), geography (using a combination of scope.geography and geography), biogeography (from biome to ecoregion level), BINs, institutes, identifiers, sequence sources, genetic markers, nucleotide base counts, dataset or projects, spatial bounding boxes, and ambiguous base percent cutoffs. The taxonomy and geography filters use a two-level scoping system that allows users to define \code{scope.taxonomy} and \code{scope.geography} to control how records are filtered. This is particularly useful when the same name exists at multiple geographic or taxonomic levels. For example, the name Azerbaijan may refer to a country, but a region with the same name also exists in Iran. If \code{scope.geography} is set to "any", records from both geographic levels will be returned. However, setting \code{scope.geography} to "country.ocean" restricts the search to country records only, returning records associated with the country of Azerbaijan. A similar situation can occur with taxonomic names where identical names are assigned to different groups. For example, the genus \strong{Iris} occurs in both plants and animals. Using \code{scope.taxonomy} allows users to specify the desired taxonomic context and avoid ambiguity between groups. Users can also specify particular columns to return using the \code{specific.cols} parameter (column names can be checked using the \code{bcdm_field_names} function). The \code{tbl_sql} object can then be used by any  \verb{bcdm_to_*} function for data transformations or \code{bold_search_collect} to load the query results in memory.
 }
 \examples{
 \dontrun{

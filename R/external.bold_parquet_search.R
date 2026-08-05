@@ -2,27 +2,27 @@
 #'
 #' @description Query records in BOLD parquet data packages using taxonomic, geographic, and other search criteria.
 #'
-#' @details This function loads the BOLD public data packages parquet files (<https://boldsystems.org/data/data-packages/>) via DuckDB and applies filters based on the provided parameters. It supports filtering by ids (sampleid, processid), taxonomy (using combination of scope.taxonomy and taxonomy), geography (using combination of scope.geography and geography), biogeography (biome to ecoregion level), BINs, institutes, identifiers, sequence sources, genetic markers, nucleotide base counts, dataset or projects, spatial bounding boxes, and ambiguous base percent cutoffs. The taxonomy and geography filters use a two-level scoping system that allows users to define `scope.taxonomy` and `scope.geography` to control how records are filtered. This is particularly useful when the same name exists at multiple geographic or taxonomic levels. For example, the name Azerbaijan may refer to a country, but a region with the same name also exists in Iran. If `scope.geography` is set to `any`, records from both geographic levels will be returned. However, setting `scope.geography` to `country.ocean` restricts the search to country records only, returning records associated with the country of Azerbaijan. A similar situation can occur with taxonomic names where identical names are assigned to different groups. For example, the genus Iris occurs in both plants and animals. Using `scope.taxonomy` allows users to specify the desired taxonomic context and avoid ambiguity between groups. Users can also specify particular columns to return using the `specific.cols` parameter (column names can be checked using the `bcdm_field_names` function). The `tbl_sql` object can then be used by any of the `bcdm_to_*` functions for data transformations or `bold_search_collect` to load all the data in memory.
+#' @details This function loads the BOLD public data package parquet files (<https://boldsystems.org/data/data-packages/>) via DuckDB and applies filters based on the provided parameters. It supports filtering by ids (sampleid, processid), taxonomy (using a combination of scope.taxonomy and taxonomy), geography (using a combination of scope.geography and geography), biogeography (from biome to ecoregion level), BINs, institutes, identifiers, sequence sources, genetic markers, nucleotide base counts, dataset or projects, spatial bounding boxes, and ambiguous base percent cutoffs. The taxonomy and geography filters use a two-level scoping system that allows users to define `scope.taxonomy` and `scope.geography` to control how records are filtered. This is particularly useful when the same name exists at multiple geographic or taxonomic levels. For example, the name Azerbaijan may refer to a country, but a region with the same name also exists in Iran. If `scope.geography` is set to "any", records from both geographic levels will be returned. However, setting `scope.geography` to "country.ocean" restricts the search to country records only, returning records associated with the country of Azerbaijan. A similar situation can occur with taxonomic names where identical names are assigned to different groups. For example, the genus **Iris** occurs in both plants and animals. Using `scope.taxonomy` allows users to specify the desired taxonomic context and avoid ambiguity between groups. Users can also specify particular columns to return using the `specific.cols` parameter (column names can be checked using the `bcdm_field_names` function). The `tbl_sql` object can then be used by any  `bcdm_to_*` function for data transformations or `bold_search_collect` to load the query results in memory.
 #'
 #' @param input.parquet Path to the input parquet file.
 #' @param ids Vector of process IDs or sample IDs used to filter records.
 #' @param bins Vector of BIN numbers (i.e., URIs) used to filter records.
-#' @param scope.taxonomy Character value specifying the kingdom (includes "all", "Animalia", "Plantae", "Protista", "Fungi", "Bacteria") (default: NULL).
-#' @param taxonomy Vector of taxonomic names to filter by (includes "kingdom", "phylum", "class", "order", "family", "subfamily","genus", "species").
-#' @param scope.geography A single character value specifying the geographic hierarchy level to search within (includes "any", "country.ocean", "province.state", "region", "sector", "site"; default: "any")
+#' @param scope.taxonomy Character value specifying the kingdom. Values include "all", "Animalia", "Plantae", "Protista", "Fungi", "Bacteria" (default: NULL).
+#' @param taxonomy Vector of taxonomic names to filter by. Values include "kingdom", "phylum", "class", "order", "family", "subfamily","genus", "species" (default: NULL).
+#' @param scope.geography A character string specifying the geographic hierarchy level for a search. Values include "any", "country.ocean", "province.state", "region", "sector", "site" (default: "any").
 #' @param geography Vector of geographic locations to filter by based on the `scope.geography`.
 #' @param institutes Vector of institute codes used to filter records.
 #' @param identified.by Vector of identifiers used to filter records.
 #' @param seq.source Vector of sequence run sites used to filter records.
 #' @param marker Vector of marker codes used to filter records.
 #' @param basecount Nucleotide base count filter - either a single value or a vector of two values for a range.
-#' @param biogeo.cat Vector of biogeographic/ecological categories to filter by (biome, realm, or ecoregion).
+#' @param biogeo.cat Character vector of biogeographic or ecological categories for filter by, such as a biome, realm, or ecoregion.
 #' @param dataset.projects Vector of dataset/project codes used to filter records.
 #' @param bounding.box Numeric vector of length 4: c(min_lon, max_lon, min_lat, max_lat).
-#' @param ambi.base.cutoff Character value for filtering data based proportion of ambiguous bases (IUPAC codes). Three values currently available ("<1%", "1-5%", or ">5%") (default: NULL).
+#' @param ambi.base.cutoff Character value for filtering data based proportion of ambiguous bases (IUPAC codes). Valid values are "<1%", "1-5%", and ">5%" (default: NULL).
 #' @param specific.cols Optional character vector of specific columns to return.
 #'
-#' @return A `tbl_sql` object containing the filtered data. Total records in the search are printed on the console.
+#' @return A `tbl_sql` object containing the filtered data. The total number of records matching the search criteria is printed to the console.
 #'
 #' @importFrom dplyr filter select
 #' @importFrom tools file_ext

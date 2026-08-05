@@ -16,7 +16,7 @@ bcdm_to_fasta(bold.search.res, output.file, fas.header, chunk.size = 1e+06)
 \item{chunk.size}{Number of records to process in each chunk (default: 1000000).}
 }
 \value{
-writes a FASTA file to disk with custom headers as specified by the user.
+Writes a FASTA file to disk with custom headers as specified by the user.
 }
 \description{
 Exports nucleotide sequences from BOLD search results to a FASTA file with customizable headers.

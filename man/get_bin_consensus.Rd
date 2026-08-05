@@ -20,15 +20,15 @@ get_bin_consensus(
 
 \item{ranks}{A character vector of ranks to consider for consensus identifications. Defaults to the standard BOLD ranks.}
 
-\item{threshold}{Numeric value(s) between 0 and 1 indicating the minimum proportion of records in a BIN that must have a concordant identification in order to establish a consensus. Supply as a single value, a vector of length equal to the number of ranks in consideration, or a named list with names corresponding to ranks. If supplied as a named list, an optional "default" value can be set for any ranks that are not explicitly specified (e.g., \code{threshold = list(species = 0.95, default = 0.75)}). Default value is 1.0 (i.e., strict consensus at all ranks).}
+\item{threshold}{Numeric value(s) between 0 and 1 indicating the minimum proportion of records in a BIN that must must share the same taxonomic assignment to establish a consensus. Supply as a single value, a vector with length equal to the number of taxonomic ranks considered, or a named list with names corresponding to specific ranks. If supplied as a named list, an optional "default" value can be set for any ranks that are not explicitly specified (e.g., \code{threshold = list(species = 0.95, default = 0.75)}). The default is 1.0 requiring complete agreement among records at all ranks.}
 
-\item{min.ids}{Numeric value(s) indicating the minimum number of identifications needed to establish a consensus (names with fewer identifications are still included when calculating proportions). Supply as a single value, a vector of length equal to the number of ranks in consideration, or a named list with names corresponding to ranks. If supplied as a named list, an optional "default" value can be set for any ranks that are not explicitly specified (e.g., \code{min.ids = list(family = 1, default = 2)}). Default value is 2 (i.e., min 2 identifications at any rank).}
+\item{min.ids}{Numeric value(s) indicating the minimum number of identifications needed to establish a consensus (names with fewer identifications are still included when calculating proportions). Supply as a single value, a vector with length equal to the number of taxonomic ranks in consideration, or a named list with names corresponding to specific ranks. If supplied as a named list, an optional "default" value can be set for any ranks that are not explicitly specified (e.g., \code{min.ids = list(family = 1, default = 2)}). The default is 2, requiring a minimum of two identifications at any rank.}
 
 \item{enforce.scientific}{A logical value indicating whether non-scientific, provisional names should be ignored when determining consensus. Default value is TRUE, meaning non-scientific names are ignored.}
 
 \item{groups}{Grouping variable. Default value is "bin_uri".}
 
-\item{discord.format}{String indicating the desired output format for the \code{discordant_ids} column. Can be one of "text", or "list". If "text" (the default), the output is a string column with comma-separated values in the format "Taxon (proportion)". If "list", the output is a list column with names indicating competing identifications and values indicating proportions of discordant identifications for each taxon.}
+\item{discord.format}{String indicating the desired output format for the \code{discordant_ids} column. Can be one of "text" or "list". If "text" (the default), the output is a string column with comma-separated values in the format "Taxon (proportion)". If "list", the output is a list column with names indicating competing identifications and values indicating proportions of discordant identifications for each taxon.}
 }
 \value{
 A table of consensus identifications for each BIN (or other grouping variable), with the following columns:
@@ -49,9 +49,7 @@ The provided \code{bold.search.res} input can be a search result object from \co
 or a BCDM data frame. Alternatively, it can be any data frame or data table minimally containing \code{bin_uri}
 (or other grouping variable) and taxonomic identifications for all available records.
 
-\strong{Important Note}: As this function performs operations on the input data, it may be quite slow for very
-large data sets and/or weaker machines. Please check the size of \code{bold.search.res} input objects
-using \code{\link{get_concise_summary}} and proceed with caution.
+\strong{Important Note}: This function performs operations on the input data and may be slow when applied to very large datasets or run on systems with limited      #' resources. Before using this function, check the size of the \code{bold.search.res}object using \code{\link{get_concise_summary}} and proceed with caution.
 }
 \examples{
 \dontrun{

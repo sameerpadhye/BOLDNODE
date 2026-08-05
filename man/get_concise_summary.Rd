@@ -23,7 +23,7 @@ The function provides a concise summary of the search obtained by \code{bold_par
 
 # Search the BOLD data package
 
-parquet_file <- "user defined path to parquet file"
+parquet_file <- "user-defined path to parquet file"
 
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,

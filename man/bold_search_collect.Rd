@@ -22,19 +22,19 @@ bold_search_collect(
 
 \item{export}{Logical value that allows user to export the output locally (default: FALSE).}
 
-\item{export.type}{Character string specifying the data type of the exported file (tsv or parquet).Required when export=TRUE.}
+\item{export.type}{Character string specifying the data type of the exported file (tsv or parquet). Required when export=TRUE.}
 
-\item{output.path}{Character string specifying the local path for data export along with the file name and extension.Required when export=TRUE.}
+\item{output.path}{Character string specifying the local path for data export along with the file name and extension. Required when export=TRUE.}
 }
 \value{
-A data frame containing all collected results; if export = TRUE, either a TSV or parquet file exported locally.
+A data frame containing all collected results. If export = TRUE, the results are also exported locally as either a TSV or Parquet file.
 }
 \description{
-Collects, outputs and exports the tbl_sql \code{bold_parquet_search} results object, processing large datasets in user defined manageable chunks.
+Collects, outputs and exports the results of a \code{bold_parquet_search} query, processing large datasets in user-defined chunks to improve memory efficiency.
 }
 \details{
-This function collects (loads it in the R session) the search results from \code{bold_parquet_search}. Data chunking and system sleep options are available to manage large sizes to avoid memory issues. The function also supports exporting the searches in either TSV or Parquet format. export=FALSE (default) returns the collected data in the R session only. The full \code{output.path} has to be provided along with the intended file name and file extension when export=TRUE.
-\emph{Important Note}: Some data searches (e.g., all Diptera) can get very large and overload the RAM capacity on some lower specification machines (e.g., 8GB RAM) irrespective of chunking and system sleep arguments.
+This function collects the results of a \code{bold_parquet_search} query into the current R session. To facilitate the handling of large datasets, records can be processed in user-defined chunks, with optional pauses between chunks to help manage memory usage and system resources. The function also supports exporting results in TSV or parquet format. When export = FALSE (default), the collected data are returned only within the R session. When export = TRUE, a complete file path, including a file name and extension, must be provided via output.path.
+\emph{Important Note}: Some queries (for example, all records from the order Diptera) may produce very large result sets that exceed the available RAM on lower-specification systems (e.g., 8 GB RAM), regardless of the chunking and system sleep settings.
 }
 \examples{
 \dontrun{
@@ -62,7 +62,7 @@ bold_search_collect(
   chunk.size = 50000,
   export = TRUE,
   export.type = "parquet",
-  output.path = "userdefinedpath"
+  output.path = "path/to/output_file.parquet"
 )
 
 }

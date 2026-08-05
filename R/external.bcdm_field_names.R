@@ -50,7 +50,7 @@ bcdm_field_names <- function(print.output = FALSE) {
       field == "province/state" ~ "province.state",
       TRUE ~ field
     ))
-# Print the fields info in console
+  # Print the fields info in console
   if (print.output == TRUE) {
     return(bold.fields.data)
   } else {
