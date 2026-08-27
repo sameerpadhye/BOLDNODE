@@ -24,7 +24,7 @@
 #' "extdata",
 #' "test_data.parquet",
 #' package = "BOLDNODE"
-#' )#'
+#' )
 #'
 #' # Search the BOLD data package
 #' bold_search <- bold_parquet_search(
