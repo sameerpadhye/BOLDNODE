@@ -1,8 +1,8 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# BOLD.NODE
+# BOLDNODE
 
-**BOLD.NODE** is an R package that offers functionality to efficiently explore BOLD dataset releases (<https://boldsystems.org/data/data-packages/>) in the **Barcode Core Data Model (BCDM)** format locally (for more information on BCDM please visit its GitHub repo <https://github.com/boldsystems-central/BCDM>). It uses a **DuckDB** back end to query **parquet** files directly in R, enabling fast searches even on systems with limited RAM. Data collection is optimized through customized chunk sizes and configurable system pause intervals.
+**BOLDNODE** is an R package that offers functionality to efficiently explore BOLD dataset releases (<https://boldsystems.org/data/data-packages/>) in the **Barcode Core Data Model (BCDM)** format locally (for more information on BCDM please visit its GitHub repo <https://github.com/boldsystems-central/BCDM>). It uses a **DuckDB** back end to query **parquet** files directly in R, enabling fast searches even on systems with limited RAM. Data collection is optimized through customized chunk sizes and configurable system pause intervals.
 
 The package also allows seamless conversion of search results into standard R data structures without collecting the data in memory for downstream analyses:
 
@@ -24,14 +24,14 @@ The user manual for the package can be downloaded from the following link: (<htt
 The package can be installed using `devtools::install_github` function from the `devtools` package in R (which first needs to be installed).
 
 ``` r
-devtools::install_github("https://github.com/sameerpadhye/BOLD.NODE.git")
+devtools::install_github("https://github.com/sameerpadhye/BOLDNODE.git")
 ```
 
 ## Downloading Data Packages
 
 Users need to log into BOLD (<https://bench.boldsystems.org/index.php/Login/page?destination=MAS_Management_UserConsole>) to download datasets in `parquet` format. Users can then directly use the file as input for the search and vocabulary functions.
 
-## BOLD.NODE has 12 functions:
+## BOLDNODE has 12 functions:
 
 1.  bcdm_field_names
 2.  bcdm_field_values

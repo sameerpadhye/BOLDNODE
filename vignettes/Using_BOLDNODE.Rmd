@@ -1,5 +1,5 @@
 ---
-title: "Using BOLD.NODE functionality"
+title: "Using BOLDNODE functionality"
 author: "Sameer Padhye, Spencer K. Monckton, Dirk Steinke, Jireh Agda, Teresita M. Porter"
 date: "`r Sys.Date()`"
 output:
@@ -14,7 +14,7 @@ output:
     fig_height: 5
     self_contained: false
 vignette: >
-  %\VignetteIndexEntry{Using BOLD.NODE}
+  %\VignetteIndexEntry{Using BOLDNODE}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -138,9 +138,9 @@ div.dataTables_scrollBody {
 
 # Introduction
 
-`BOLD.NODE` (**N**o-API **O**ffline **D**ata **E**xplorer) is a sister package to `BOLDconnectR` that provides local access to BOLD data packages through DuckDB, enabling exploration and analysis of public BOLD data without API limitations. `BOLD.NODE` therefore, offers an offline solution for working with large scale BOLD datasets locally. Please refer to the package documentation <https://github.com/sameerpadhye/BOLD.NODE> for more details about the package.
+`BOLDNODE` (**N**o-API **O**ffline **D**ata **E**xplorer) is a sister package to `BOLDconnectR` that provides local access to BOLD data packages through DuckDB, enabling exploration and analysis of public BOLD data without API limitations. `BOLDNODE` therefore, offers an offline solution for working with large scale BOLD datasets locally. Please refer to the package documentation <https://github.com/sameerpadhye/BOLDNODE> for more details about the package.
 
-This vignette demonstrates a complete workflow integrating the *search*, *collect*, *get\_* and *bcdm_to* functions in `BOLD.NODE` for efficient and scalable exploration of BOLD data packages.
+This vignette demonstrates a complete workflow integrating the *search*, *collect*, *get\_* and *bcdm_to* functions in `BOLDNODE` for efficient and scalable exploration of BOLD data packages.
 
 As a case study, we use Canadian **Cerambycidae** (longhorn beetles) to illustrate how these functions can be combined to search, retrieve, and transform the BCDM data.
 
@@ -157,13 +157,13 @@ As a case study, we use Canadian **Cerambycidae** (longhorn beetles) to illustra
 
 # Practical Workflow
 
-## Installing and importing `BOLD.NODE` and other packages
+## Installing and importing `BOLDNODE` and other packages
 
-The latest (in development) version of `BOLD.NODE` can be installed via `pak`. Packages like `Biostrings` require `BiocManager` since they are hosted by **Bioconductor**.
+The latest (in development) version of `BOLDNODE` can be installed via `pak`. Packages like `Biostrings` require `BiocManager` since they are hosted by **Bioconductor**.
 
 ```{r install packages,message=F,warning=F,echo=FALSE,include=F}
 # CRAN packages
-library(BOLD.NODE)
+library(BOLDNODE)
 library(dplyr)
 library(ggplot2)
 library(tibble)
@@ -171,7 +171,7 @@ library(tidyr)
 ```
 
 ```{r package_install_for_vignette,message=F,warning=F,echo=FALSE}
-# library(BOLD.NODE)
+# library(BOLDNODE)
 ```
 ## Data packages
 
@@ -192,7 +192,7 @@ The path where the file is downloaded is saved as a variable that can be used as
 parquet_file <- system.file(
   "extdata",
   "test_data.parquet",
-  package = "BOLD.NODE"
+  package = "BOLDNODE"
 )
 ```
 
@@ -582,8 +582,8 @@ Benchmarking used three representative queries:
 
 Search (`bold_parquet_search`) and data retrieval (`bold_search_collect`) were benchmarked separately using the `rbenchmark` package with three replications on the *30th June 2026 data releaseß*(<https://doi.org/10.5883/DP-BOLD_Public.30-Jun-2026>). Tests were run on a *MacBook Air M2 (8-core CPU, 16 GB RAM)*. Across the three datasets, `bold_parquet_search` completed in 1.1 - 1.3s, while `bold_search_collect` required approximately 4 - 12 min, with runtime increasing as dataset size increased.
 
-`BOLD.NODE` can efficiently search and retrieve very large datasets; however, the data retrieval (`collect`) step is constrained by the user's available system memory, and collecting very large query results may exceed the machine's memory capacity.
+`BOLDNODE` can efficiently search and retrieve very large datasets; however, the data retrieval (`collect`) step is constrained by the user's available system memory, and collecting very large query results may exceed the machine's memory capacity.
 
 ## Integration with `BOLDconnectR`
 
-Functions from BOLD.NODE can be combined with the analysis functions from the `BOLDconnectR` package because BOLD data packages are based on the **Barcode Core Data Model (BCDM)** (<https://github.com/boldsystems-central/BCDM>). This shared data structure enables direct interoperability between packages without requiring additional data conversion.
+Functions from BOLDNODE can be combined with the analysis functions from the `BOLDconnectR` package because BOLD data packages are based on the **Barcode Core Data Model (BCDM)** (<https://github.com/boldsystems-central/BCDM>). This shared data structure enables direct interoperability between packages without requiring additional data conversion.

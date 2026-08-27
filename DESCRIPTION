@@ -1,4 +1,4 @@
-Package: BOLD.NODE
+Package: BOLDNODE
 Title: Search and Explore BOLD Data Packages Efficiently
 Version: 1.0.0
 Authors@R: c(
