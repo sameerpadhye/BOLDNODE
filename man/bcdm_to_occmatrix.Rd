@@ -37,22 +37,26 @@ This function transforms the search results from \code{bold_parquet_search} into
 \emph{Important Note}: The \code{bcdm_to_occmatrix} function requires \code{taxonomy} (including \code{bin_uri}) and \code{geography} fields to be available in the \code{bold_parquet_search} result. If the \code{specific.cols} argument is used in the \code{bold_parquet_search} function to retrieve certain columns that do not have taxonomy and geography columns, the function will throw an error.
 }
 \examples{
-\dontrun{
+\donttest{
 
+# Import the parquet file (This is a test parquet file composed of
+# records of Cerambycidae beetles from Canada)
+parquet_file <- system.file(
+"extdata",
+"test_data.parquet",
+package = "BOLDNODE"
+)
 
 # Search the BOLD data package
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,
-  taxonomy = "Odonata",
-  geography = "Thailand"
+  marker = "COI-5P",
 )
 
-# Get the occurrence matrix
-
+# Get the occurrence matrix#'
 occurrence_data <- bcdm_to_occmatrix(
   bold_search,
-  kingdom = "Animalia",
-  taxon.rank = "family",
+  taxon.rank = "genus",
   site.cat = "region"
 )
 }

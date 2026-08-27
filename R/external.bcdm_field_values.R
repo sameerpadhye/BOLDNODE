@@ -15,19 +15,25 @@
 #' @importFrom rlang .data
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#'
+#' # Import the parquet file (This is a test parquet file composed of
+#' # records of Cerambycidae beetles from Canada)
+#' parquet_file <- system.file(
+#' "extdata",
+#' "test_data.parquet",
+#' package = "BOLDNODE"
+#' )
+#'
 #' # Search the BOLD data package
 #' bold_search <- bold_parquet_search(
 #'   input.parquet = parquet_file,
-#'   taxonomy = "Diptera",
-#'   geography = "India",
 #'   marker = "COI-5P"
 #' )
 #'
-#' # Get the field values
-#'
-#' vocab.data <- bcdm_field_values(bold_search, bold_search,
-#'   specific.cols = c("inst", "identified.by")
+#' # Get the field values#'
+#' vocab.data <- bcdm_field_values(bold_search,
+#'   specific.cols = c("inst", "identified_by")
 #' )
 #' }
 #' @export

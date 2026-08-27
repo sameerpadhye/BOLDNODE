@@ -18,7 +18,6 @@
 #' @examples
 #' \dontrun{
 #'
-#'
 #' # Search the BOLD data package
 #' bold_search <- bold_parquet_search(
 #'   input.parquet = parquet_file,

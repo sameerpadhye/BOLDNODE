@@ -19,16 +19,21 @@ Creates a summary statistics table from the \code{bold_parquet_search} \code{tb_
 The function provides a concise summary of the search obtained by \code{bold_parquet_search} that includes: total records, unique BINs, unique institutes, unique markers and amplicon size range.
 }
 \examples{
-\dontrun{
+\donttest{
 
 # Search the BOLD data package
 
-parquet_file <- "user-defined path to parquet file"
+# Import the parquet file (This is a test parquet file composed of
+# records of Cerambycidae beetles from Canada)
+parquet_file <- system.file(
+"extdata",
+"test_data.parquet",
+package = "BOLDNODE"
+)
 
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,
-  taxonomy = "Hemiptera",
-  geography = "India",
+  taxonomy = "Lamiinae",
   marker = "COI-5P"
 )
 # Get the concise summary

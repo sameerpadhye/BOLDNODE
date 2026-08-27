@@ -69,30 +69,35 @@ Query records in BOLD parquet data packages using taxonomic, geographic, and oth
 This function loads the BOLD public data package parquet files (\url{https://boldsystems.org/data/data-packages/}) via DuckDB and applies filters based on the provided parameters. It supports filtering by ids (sampleid, processid), taxonomy (using a combination of scope.taxonomy and taxonomy), geography (using a combination of scope.geography and geography), biogeography (from biome to ecoregion level), BINs, institutes, identifiers, sequence sources, genetic markers, nucleotide base counts, dataset or projects, spatial bounding boxes, and ambiguous base percent cutoffs. The taxonomy and geography filters use a two-level scoping system that allows users to define \code{scope.taxonomy} and \code{scope.geography} to control how records are filtered. This is particularly useful when the same name exists at multiple geographic or taxonomic levels. For example, the name Azerbaijan may refer to a country, but a region with the same name also exists in Iran. If \code{scope.geography} is set to "any", records from both geographic levels will be returned. However, setting \code{scope.geography} to "country.ocean" restricts the search to country records only, returning records associated with the country of Azerbaijan. A similar situation can occur with taxonomic names where identical names are assigned to different groups. For example, the genus \strong{Iris} occurs in both plants and animals. Using \code{scope.taxonomy} allows users to specify the desired taxonomic context and avoid ambiguity between groups. Users can also specify particular columns to return using the \code{specific.cols} parameter (column names can be checked using the \code{bcdm_field_names} function). The \code{tbl_sql} object can then be used by any  \verb{bcdm_to_*} function for data transformations or \code{bold_search_collect} to load the query results in memory.
 }
 \examples{
-\dontrun{
+\donttest{
 
+# Import the parquet file (This is a test parquet file composed of
+# records of Cerambycidae beetles from Canada)
+parquet_file <- system.file(
+"extdata",
+"test_data.parquet",
+package = "BOLDNODE"
+)
 
 # Search the BOLD data package
 
 # Taxonomy
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,
-  taxonomy = c("Odonata", "Poecilia")
+  taxonomy = "Clytus"
 )
 
 # Geography
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,
-  geography = "Canada"
+  geography = "Ontario"
 )
 
 # Combination of many search criteria
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,
-  scope.taxonomy = 'Animalia',
-  taxonomy = "Coleoptera",
-  scope.geography = 'country.ocean'
-  geography = "Canada",
+  taxonomy = "Trachysida",
+  geography = "British Columbia",
   marker = "COI-5P",
   basecount = c(500, 660)
 )

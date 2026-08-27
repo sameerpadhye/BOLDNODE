@@ -16,22 +16,30 @@ A data frame with columns mapped to Darwin Core equivalent fields.
 Converts \code{bold_parquet_search} results from BCDM format to Darwin Core Standard format.
 }
 \details{
-This function maps BCDM (Barcode Core Data Model) fields to their Darwin Core equivalents.
+This function maps BCDM (Barcode Core Data Model) fields to their Darwin Core equivalents (\url{https://gbif.github.io/dwc-dp/qrg/})
 
 \emph{Important Note}: All fields should be available in the \code{bold_parquet_search} \code{tbl_sql} object otherwise, the function will throw an error.
 }
 \examples{
-\dontrun{
+\donttest{
+
+# Import the parquet file (This is a test parquet file composed of
+# records of Cerambycidae beetles from Canada)
+parquet_file <- system.file(
+"extdata",
+"test_data.parquet",
+package = "BOLDNODE"
+)
 
 # Search the BOLD data package
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,
-  taxonomy = c("Cerambycidae", "Meloidae"),
-  geography = "Australia"
+  taxonomy = "Lepturinae",
+  marker = "COI-5P",
+  basecount = c(550, 660)
 )
 
-# Get the DwC object
-
+# Get the DwC object#'
 bold.dwc <- bcdm_to_dwc(bold_search)
 }
 }

@@ -30,30 +30,35 @@
 #' @importFrom utils head
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
+#' # Import the parquet file (This is a test parquet file composed of
+#' # records of Cerambycidae beetles from Canada)
+#' parquet_file <- system.file(
+#' "extdata",
+#' "test_data.parquet",
+#' package = "BOLDNODE"
+#' )
 #'
 #' # Search the BOLD data package
 #'
 #' # Taxonomy
 #' bold_search <- bold_parquet_search(
 #'   input.parquet = parquet_file,
-#'   taxonomy = c("Odonata", "Poecilia")
+#'   taxonomy = "Clytus"
 #' )
 #'
 #' # Geography
 #' bold_search <- bold_parquet_search(
 #'   input.parquet = parquet_file,
-#'   geography = "Canada"
+#'   geography = "Ontario"
 #' )
 #'
 #' # Combination of many search criteria
 #' bold_search <- bold_parquet_search(
 #'   input.parquet = parquet_file,
-#'   scope.taxonomy = 'Animalia',
-#'   taxonomy = "Coleoptera",
-#'   scope.geography = 'country.ocean'
-#'   geography = "Canada",
+#'   taxonomy = "Trachysida",
+#'   geography = "British Columbia",
 #'   marker = "COI-5P",
 #'   basecount = c(500, 660)
 #' )

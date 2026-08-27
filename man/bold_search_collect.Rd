@@ -37,14 +37,20 @@ This function collects the results of a \code{bold_parquet_search} query into th
 \emph{Important Note}: Some queries (for example, all records from the order Diptera) may produce very large result sets that exceed the available RAM on lower-specification systems (e.g., 8 GB RAM), regardless of the chunking and system sleep settings.
 }
 \examples{
-\dontrun{
+\donttest{
 
+# Import the parquet file (This is a test parquet file composed of
+# records of Cerambycidae beetles from Canada)
+parquet_file <- system.file(
+"extdata",
+"test_data.parquet",
+package = "BOLDNODE"
+)#'
 
 # Search the BOLD data package
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,
-  taxonomy = "Coleoptera",
-  geography = "Canada",
+  #    geography = "Ontario",
   marker = "COI-5P",
   basecount = c(500, 660)
 )
@@ -55,15 +61,5 @@ bold_search_collect(
   chunk.size = 50000,
   export = FALSE
 )
-
-# Collect and export
-bold_search_collect(
-  bold_search,
-  chunk.size = 50000,
-  export = TRUE,
-  export.type = "parquet",
-  output.path = "path/to/output_file.parquet"
-)
-
 }
 }

@@ -25,7 +25,6 @@ This function transforms the search results from \code{bold_parquet_search} into
 \examples{
 \dontrun{
 
-
 # Search the BOLD data package
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,
@@ -34,7 +33,7 @@ bold_search <- bold_parquet_search(
   basecount = c(500, 660)
 )
 
-# Get the DNAStringset object
+# Get the DNAStringset object (library Biostrings needs to be imported beforehand)
 
 bold.dnastringset <- bcdm_to_dnastringset(bold_search,
   marker = "COI-5P",

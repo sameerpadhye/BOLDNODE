@@ -138,9 +138,13 @@ bold_search <- bold_parquet_search(
 bin_reps <- get_bin_reps(
   bold.search.res = bold_search,
   Nreps = 3,
-  criteria = list(inst = "Centre for Biodiversity Genomics",
-                  id_method = c("Morphology",
-                                "Morphology and sequence based"))
+  criteria = list(
+    inst = "Centre for Biodiversity Genomics",
+    id_method = c(
+      "Morphology",
+      "Morphology and sequence based"
+    )
+  )
 )
 
 # Select one representative for each combination of BIN and taxonomic

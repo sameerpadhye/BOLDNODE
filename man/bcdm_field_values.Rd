@@ -30,19 +30,25 @@ Extracts distinct values of specified field(s) from the BOLD parquet data.
 This function extracts unique values from one or more specified columns from the BOLD parquet data. It handles both the parquet file and \code{tbl_sql} objects from \code{bold_parquet_search} as input. The results can be saved to disk as an \code{.rds} file for later use.
 }
 \examples{
-\dontrun{
+\donttest{
+
+# Import the parquet file (This is a test parquet file composed of
+# records of Cerambycidae beetles from Canada)
+parquet_file <- system.file(
+"extdata",
+"test_data.parquet",
+package = "BOLDNODE"
+)
+
 # Search the BOLD data package
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,
-  taxonomy = "Diptera",
-  geography = "India",
   marker = "COI-5P"
 )
 
-# Get the field values
-
-vocab.data <- bcdm_field_values(bold_search, bold_search,
-  specific.cols = c("inst", "identified.by")
+# Get the field values#'
+vocab.data <- bcdm_field_values(bold_search,
+  specific.cols = c("inst", "identified_by")
 )
 }
 }

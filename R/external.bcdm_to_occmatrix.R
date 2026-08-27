@@ -20,22 +20,26 @@
 #' @importFrom tidyr pivot_wider
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
+#' # Import the parquet file (This is a test parquet file composed of
+#' # records of Cerambycidae beetles from Canada)
+#' parquet_file <- system.file(
+#' "extdata",
+#' "test_data.parquet",
+#' package = "BOLDNODE"
+#' )
 #'
 #' # Search the BOLD data package
 #' bold_search <- bold_parquet_search(
 #'   input.parquet = parquet_file,
-#'   taxonomy = "Odonata",
-#'   geography = "Thailand"
+#'   marker = "COI-5P",
 #' )
 #'
-#' # Get the occurrence matrix
-#'
+#' # Get the occurrence matrix#'
 #' occurrence_data <- bcdm_to_occmatrix(
 #'   bold_search,
-#'   kingdom = "Animalia",
-#'   taxon.rank = "family",
+#'   taxon.rank = "genus",
 #'   site.cat = "region"
 #' )
 #' }

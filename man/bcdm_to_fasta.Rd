@@ -27,7 +27,6 @@ This function transforms the search results from \code{bold_parquet_search} into
 \examples{
 \dontrun{
 
-
 # Search the BOLD data package
 bold_search <- bold_parquet_search(
   input.parquet = parquet_file,

@@ -17,7 +17,6 @@
 #' @examples
 #' \dontrun{
 #'
-#'
 #' # Search the BOLD data package
 #' bold_search <- bold_parquet_search(
 #'   input.parquet = parquet_file,
@@ -26,7 +25,7 @@
 #'   basecount = c(500, 660)
 #' )
 #'
-#' # Get the DNAStringset object
+#' # Get the DNAStringset object (library Biostrings needs to be imported beforehand)
 #'
 #' bold.dnastringset <- bcdm_to_dnastringset(bold_search,
 #'   marker = "COI-5P",

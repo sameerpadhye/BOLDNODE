@@ -124,9 +124,13 @@
 #' bin_reps <- get_bin_reps(
 #'   bold.search.res = bold_search,
 #'   Nreps = 3,
-#'   criteria = list(inst = "Centre for Biodiversity Genomics",
-#'                   id_method = c("Morphology",
-#'                                 "Morphology and sequence based"))
+#'   criteria = list(
+#'     inst = "Centre for Biodiversity Genomics",
+#'     id_method = c(
+#'       "Morphology",
+#'       "Morphology and sequence based"
+#'     )
+#'   )
 #' )
 #'
 #' # Select one representative for each combination of BIN and taxonomic
@@ -144,59 +148,73 @@
 #'
 #' @export
 get_bin_reps <- function(
-    bold.search.res,
-    Nreps = 1,
-    by.taxon = FALSE,
-    enforce.scientific = FALSE,
-    non.redundant.taxa = FALSE,
-    criteria = list(vouchered = TRUE,
-                    seq_length = c("COI_auto", "longest", "shortest", 658),
-                    id_method = c("Morphology", "Morphology and sequence based",
-                                  "Image based", "Image and sequence based",
-                                  "Tree based", "BIN based", "BOLD ID Engine",
-                                  "Other sequence based approach", "Other"),
-                    inst = "Centre for Biodiversity Genomics",
-                    coll_date = c("latest", "oldest"),
-                    seq_date = c("latest", "oldest")),
-    seed = NULL
+  bold.search.res,
+  Nreps = 1,
+  by.taxon = FALSE,
+  enforce.scientific = FALSE,
+  non.redundant.taxa = FALSE,
+  criteria = list(
+    vouchered = TRUE,
+    seq_length = c("COI_auto", "longest", "shortest", 658),
+    id_method = c(
+      "Morphology", "Morphology and sequence based",
+      "Image based", "Image and sequence based",
+      "Tree based", "BIN based", "BOLD ID Engine",
+      "Other sequence based approach", "Other"
+    ),
+    inst = "Centre for Biodiversity Genomics",
+    coll_date = c("latest", "oldest"),
+    seq_date = c("latest", "oldest")
+  ),
+  seed = NULL
 ) {
   # Check input format
   is_tbl_sql <- isTRUE(try(check.tbl.sql(bold.search.res), silent = TRUE))
-  if(!is_tbl_sql && !is.data.frame(bold.search.res)) stop("`bold.search.res` must be either a bold_parquet_search output (tbl_sql / dbplyr table) or a data frame / data table.")
+  if (!is_tbl_sql && !is.data.frame(bold.search.res)) stop("`bold.search.res` must be either a bold_parquet_search output (tbl_sql / dbplyr table) or a data frame / data table.")
   # Check parameters
-  stopifnot("'Nreps' must be a single numeric value." = is.numeric(Nreps)  && length(Nreps) == 1,
-            "'by.taxon' must be a single logical value." = is.logical(by.taxon) && length(by.taxon) == 1,
-            "'non.redundant.taxa' must be a single logical value." = is.logical(non.redundant.taxa) && length(non.redundant.taxa) == 1,
-            "'enforce.scientific' must be a single logical value." = is.logical(enforce.scientific) && length(enforce.scientific) == 1)
-  if(!missing(criteria)) {
-    if(length(criteria$seq_length) > 1) {
+  stopifnot(
+    "'Nreps' must be a single numeric value." = is.numeric(Nreps) && length(Nreps) == 1,
+    "'by.taxon' must be a single logical value." = is.logical(by.taxon) && length(by.taxon) == 1,
+    "'non.redundant.taxa' must be a single logical value." = is.logical(non.redundant.taxa) && length(non.redundant.taxa) == 1,
+    "'enforce.scientific' must be a single logical value." = is.logical(enforce.scientific) && length(enforce.scientific) == 1
+  )
+  if (!missing(criteria)) {
+    if (length(criteria$seq_length) > 1) {
       stop("'seq_length' criterion must be a single value.")
-    } else if(length(criteria$seq_length) == 1) {
-      if(!any((criteria$seq_length %in% c("COI_auto", "longest", "shortest")),
-              is.numeric(criteria$seq_length))) {
+    } else if (length(criteria$seq_length) == 1) {
+      if (!any(
+        (criteria$seq_length %in% c("COI_auto", "longest", "shortest")),
+        is.numeric(criteria$seq_length)
+      )) {
         stop("'seq_length' criterion must be one of 'COI_auto', 'longest', 'shortest', or a numeric value.")
       }
     }
-    stopifnot("'vouchered' criterion must be a single logical value." =
-                length(criteria$vouchered) == 0 || is.logical(criteria$vouchered) && length(criteria$vouchered) == 1)
-    if(length(criteria$coll_date) > 1) stop("'coll_date' criterion must be one of 'latest' or 'oldest'.")
-    if(length(criteria$seq_date) > 1) stop("'seq_date' criterion must be one of 'latest' or 'oldest'.")
+    stopifnot(
+      "'vouchered' criterion must be a single logical value." =
+        length(criteria$vouchered) == 0 || is.logical(criteria$vouchered) && length(criteria$vouchered) == 1
+    )
+    if (length(criteria$coll_date) > 1) stop("'coll_date' criterion must be one of 'latest' or 'oldest'.")
+    if (length(criteria$seq_date) > 1) stop("'seq_date' criterion must be one of 'latest' or 'oldest'.")
   } else {
     # Supply default criteria if param is omitted
-    criteria = list(vouchered = TRUE,
-                    seq_length = "COI_auto",
-                    id_method = c("Morphology", "Morphology and sequence based",
-                                  "Image based", "Image and sequence based",
-                                  "Tree based", "BIN based", "BOLD ID Engine",
-                                  "Other sequence based approach", "Other"),
-                    inst = "Centre for Biodiversity Genomics",
-                    coll_date = "latest",
-                    seq_date = "latest")
+    criteria <- list(
+      vouchered = TRUE,
+      seq_length = "COI_auto",
+      id_method = c(
+        "Morphology", "Morphology and sequence based",
+        "Image based", "Image and sequence based",
+        "Tree based", "BIN based", "BOLD ID Engine",
+        "Other sequence based approach", "Other"
+      ),
+      inst = "Centre for Biodiversity Genomics",
+      coll_date = "latest",
+      seq_date = "latest"
+    )
   }
   # Default BOLD ranks
   ranks <- c("kingdom", "phylum", "class", "order", "family", "subfamily", "tribe", "genus", "species", "subspecies")
   # Define grouping columns
-  select_by <- if(by.taxon) {
+  select_by <- if (by.taxon) {
     c("bin_uri", "identification")
   } else {
     "bin_uri"
@@ -204,10 +222,12 @@ get_bin_reps <- function(
   # Ensure Nreps is a whole number
   Nreps <- round(Nreps, 0)
   # Deduce specimen identifier
-  id_col <- intersect(c("processid", "sampleid", "fieldid", "museumid", "record_id", "specimenid"),
-                      colnames(bold.search.res))[[1]]
+  id_col <- intersect(
+    c("processid", "sampleid", "fieldid", "museumid", "record_id", "specimenid"),
+    colnames(bold.search.res)
+  )[[1]]
   # Proceed according to input object type
-  bin_reps <- if(is_tbl_sql) {
+  bin_reps <- if (is_tbl_sql) {
     # Shuffle data to randomize representative order, or set pre-determined order using random seed
     df_shuffle <- if (!is.null(seed)) {
       bold.search.res %>% dplyr::mutate(.rand = md5(paste0(!!sym(id_col), !!as.character(seed))))
@@ -252,9 +272,9 @@ get_bin_reps <- function(
       dplyr::select(-all_of(temp_names), -.row_rank, -.rand, -any_of(c(".bin_mode")))
     # For simplicity when by.taxon == TRUE all unique combinations of `bin_uri` and `identification`
     # are collected initially, then filtered further if applicable
-    if(by.taxon) {
+    if (by.taxon) {
       # Move interim names to bottom (may still be selected if they are the only reps that fulfill the criteria)
-      if(enforce.scientific) df_reps <- df_reps %>% dplyr::arrange(grepl(re_int, identification, perl = TRUE))
+      if (enforce.scientific) df_reps <- df_reps %>% dplyr::arrange(grepl(re_int, identification, perl = TRUE))
       # Build a taxonomy lookup table with matching indices, which can be safely modified
       id_lookup <- df_reps %>%
         dplyr::select(all_of(c("bin_uri", "identification", "identification_rank", ranks))) %>%
@@ -266,9 +286,9 @@ get_bin_reps <- function(
         )))
       if (enforce.scientific) {
         # Interim names were already suppressed in the previous step; now we re-compute identification & rank
-        vals   <- as.matrix(id_lookup[ranks])
-        mask   <- !is.na(vals)
-        idx    <- max.col(mask, ties.method = "last")
+        vals <- as.matrix(id_lookup[ranks])
+        mask <- !is.na(vals)
+        idx <- max.col(mask, ties.method = "last")
         all_na <- rowSums(mask) == 0L
         id_lookup <- id_lookup %>%
           dplyr::mutate(
@@ -286,7 +306,7 @@ get_bin_reps <- function(
         id_lookup <- id_lookup %>% dplyr::slice(keep_rows)
         df_reps <- df_reps %>% dplyr::slice(keep_rows)
       }
-      if(non.redundant.taxa) {
+      if (non.redundant.taxa) {
         id_lookup_by_bin <- split(id_lookup, id_lookup$bin_uri)
         # Group-wise function to find lowest non-redundant identification for each BIN
         filter_ids <- function(df, ...) {
@@ -299,10 +319,16 @@ get_bin_reps <- function(
           id_counts$count <- mapply(
             function(rank, val) sum(id_counts[[rank]] == val, na.rm = TRUE),
             id_counts[["identification_rank"]], id_counts[["identification"]]
-            )
+          )
           id_counts <- id_counts %>% dplyr::arrange("count")
-          unique_ids <- id_counts %>% dplyr::filter(count == 1) %>% dplyr::pull("identification") %>% as.character()
-          next_best <- id_counts %>% dplyr::filter(count != 1) %>% dplyr::pull("identification") %>% as.character()
+          unique_ids <- id_counts %>%
+            dplyr::filter(count == 1) %>%
+            dplyr::pull("identification") %>%
+            as.character()
+          next_best <- id_counts %>%
+            dplyr::filter(count != 1) %>%
+            dplyr::pull("identification") %>%
+            as.character()
           # Select Nreps for each unique taxon
           keep <- group_lookup %>%
             dplyr::filter(identification %in% unique_ids) %>%
@@ -311,15 +337,16 @@ get_bin_reps <- function(
             dplyr::ungroup() %>%
             dplyr::pull(".row")
           # If less than `Nreps` have lowest non-redundant ID, fill out the rest with the next-best IDs
-          if(length(keep) < Nreps) {
-            keep <- c(keep,
-                      group_lookup %>%
-                        dplyr::filter(identification %in% next_best) %>%
-                        dplyr::mutate(identification = factor(identification, levels = next_best)) %>%
-                        dplyr::arrange(identification) %>%
-                        dplyr::slice_head(n = Nreps - length(keep)) %>%
-                        dplyr::pull(".row")
-                      )
+          if (length(keep) < Nreps) {
+            keep <- c(
+              keep,
+              group_lookup %>%
+                dplyr::filter(identification %in% next_best) %>%
+                dplyr::mutate(identification = factor(identification, levels = next_best)) %>%
+                dplyr::arrange(identification) %>%
+                dplyr::slice_head(n = Nreps - length(keep)) %>%
+                dplyr::pull(".row")
+            )
           }
           df %>% dplyr::slice(keep)
         }
@@ -335,27 +362,28 @@ get_bin_reps <- function(
     df_reps
   } else { # If local data is supplied, select BIN reps from there
     # Randomize representative order (using random seed for pre-determined order if provided)
-    if(!is.null(seed)) set.seed(seed)
+    if (!is.null(seed)) set.seed(seed)
     data <- as.data.table(bold.search.res)[sample(nrow(bold.search.res))]
     data <- unique(data[!is.na(bin_uri) & (bin_uri != "") & (marker_code == "COI-5P")], by = id_col)
     # Filter by identification if applicable
-    if(by.taxon) {
+    if (by.taxon) {
       # Move interim names to the bottom (they may still be selected if they match other criteria)
-      if(enforce.scientific) data <- data[order(bin_uri, grepl(re_int, identification, perl = TRUE))]
-      if(enforce.scientific || non.redundant.taxa) {
+      if (enforce.scientific) data <- data[order(bin_uri, grepl(re_int, identification, perl = TRUE))]
+      if (enforce.scientific || non.redundant.taxa) {
         # Build a taxonomy lookup table with matching indices to be mutated (suppressing interim names if applicable)
         id_lookup <- data[, .SD, .SDcols = c("bin_uri", "identification", "identification_rank", ranks)]
-        id_lookup[, c(ranks, if(enforce.scientific) c("identification", "identification_rank")) := {
+        id_lookup[, c(ranks, if (enforce.scientific) c("identification", "identification_rank")) := {
           cleaned <- lapply(.SD, function(x) {
             fcase(enforce.scientific & grepl(re_int, x, perl = TRUE), NA_character_,
-                  x == "", NA_character_,
-                  grepl("^\\s$", x), NA_character_,
-                  default = as.character(x))
+              x == "", NA_character_,
+              grepl("^\\s$", x), NA_character_,
+              default = as.character(x)
+            )
           })
           if (enforce.scientific) {
-            vals   <- do.call(cbind, cleaned)
-            mask   <- !is.na(vals)
-            idx    <- max.col(mask, ties.method = "last")
+            vals <- do.call(cbind, cleaned)
+            mask <- !is.na(vals)
+            idx <- max.col(mask, ties.method = "last")
             all_na <- rowSums(mask) == 0L
             c(cleaned, list(
               ifelse(all_na, NA_character_, vals[cbind(seq_len(.N), idx)]),
@@ -366,7 +394,7 @@ get_bin_reps <- function(
           }
         }, .SDcols = ranks]
       }
-      if(enforce.scientific) {
+      if (enforce.scientific) {
         # Substitute cleaned identification for later rep selection
 
         data[, "id_clean" := id_lookup$identification]
@@ -378,36 +406,40 @@ get_bin_reps <- function(
     # Apply sort keys in sequence to select and return representatives
     rep_idx <- data[do.call("order", sort_sequence), .I[seq_len(min(Nreps, .N))], by = select_by]$V1
     data <- data[rep_idx, ]
-    if(by.taxon) {
-      if(enforce.scientific || non.redundant.taxa) id_lookup <- id_lookup[rep_idx, ]
-      if(non.redundant.taxa) {
+    if (by.taxon) {
+      if (enforce.scientific || non.redundant.taxa) id_lookup <- id_lookup[rep_idx, ]
+      if (non.redundant.taxa) {
         id_lookup_by_bin <- split(id_lookup, id_lookup$bin_uri)
-          # Find and apply the indices of records with the lowest non-redundant identification in each BIN
-          data <- data[id_lookup[, .I[({
-            bin_taxa <- id_lookup_by_bin[[.BY$bin_uri]]
-            cols_to_use <- c("identification", "identification_rank", ranks[sapply(ranks, function(rank) !all(is.na(bin_taxa[[rank]]) | bin_taxa[[rank]] == ""))])
-            bin_taxa <- bin_taxa[, .SD, .SDcols = cols_to_use]
-            ids_ranked <- unique(bin_taxa)
-            ids_ranked[, id_count := mapply(
-              function(rank, id) .SD[.SD[[rank]] == id, .N],
-              as.character(identification_rank),
-              as.character(identification))]
-            data.table::setorder(ids_ranked, id_count)
-            keep <- bin_taxa[identification %in% ids_ranked[id_count == 1, identification], which = TRUE]
-            # If less than `Nreps` have lowest non-redundant ID, fill out the rest with the next-best IDs
-            if(length(keep) < Nreps) {
-              next_best <- unique(bin_taxa[identification %in% ids_ranked[id_count != 1, identification], identification])
-              add <- bin_taxa[, .(identification, row = .I)][identification %in% next_best][
-                , identification := factor(identification, levels = next_best)][
-                  order(identification)][
-                    , head(row, Nreps - length(keep))]
-              keep <- c(keep, add)
-            }
-            bin_taxa[, .I] %in% keep
-          })], by = "bin_uri"]$V1]
+        # Find and apply the indices of records with the lowest non-redundant identification in each BIN
+        data <- data[id_lookup[, .I[({
+          bin_taxa <- id_lookup_by_bin[[.BY$bin_uri]]
+          cols_to_use <- c("identification", "identification_rank", ranks[sapply(ranks, function(rank) !all(is.na(bin_taxa[[rank]]) | bin_taxa[[rank]] == ""))])
+          bin_taxa <- bin_taxa[, .SD, .SDcols = cols_to_use]
+          ids_ranked <- unique(bin_taxa)
+          ids_ranked[, id_count := mapply(
+            function(rank, id) .SD[.SD[[rank]] == id, .N],
+            as.character(identification_rank),
+            as.character(identification)
+          )]
+          data.table::setorder(ids_ranked, id_count)
+          keep <- bin_taxa[identification %in% ids_ranked[id_count == 1, identification], which = TRUE]
+          # If less than `Nreps` have lowest non-redundant ID, fill out the rest with the next-best IDs
+          if (length(keep) < Nreps) {
+            next_best <- unique(bin_taxa[identification %in% ids_ranked[id_count != 1, identification], identification])
+            add <- bin_taxa[, .(identification, row = .I)][identification %in% next_best][
+              , identification := factor(identification, levels = next_best)
+            ][
+              order(identification)
+            ][
+              , head(row, Nreps - length(keep))
+            ]
+            keep <- c(keep, add)
+          }
+          bin_taxa[, .I] %in% keep
+        })], by = "bin_uri"]$V1]
       }
       # Remove cleaned ID column if added previously
-      if(enforce.scientific) data[, "id_clean" := NULL]
+      if (enforce.scientific) data[, "id_clean" := NULL]
     }
     data
   }
