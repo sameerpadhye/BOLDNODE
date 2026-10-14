@@ -180,10 +180,11 @@ get_bin_consensus <- function(
       names(name_vals) <- sub("^$", "<None>", names(name_vals))
       if ((length(props) != 1) & (length(unique(filtered)) > 0)) {
         concordant <- FALSE
-        if (id_hier[rank_col] != "") {
-          rank_set <- ranks[0:(which(ranks == rank_col) - 1)]
-          id_hier <- id_hier[rank_set]
-        }
+        result$concordant_rank     <- NA_character_
+        result$concordant_id       <- NA_character_
+        result$concordant_id_count <- 0L
+        rank_set <- ranks[seq_len(which(ranks == rank_col) - 1)]
+        id_hier  <- id_hier[rank_set]
         if (length(name_vals) > 1) {
           result$discordant_rank <- rank_col
           result$discordant_ids <- list(stats::setNames(as.vector(name_vals), names(name_vals)))
@@ -208,8 +209,12 @@ get_bin_consensus <- function(
     result[ranks] <- id_hier
     return(result)
   }
-  # Generate summary of consensus by BIN
+  # Generate summary of consensus by BIN (re-order to avoid error when first group has no taxonomy)
+  group_order <- unique(dt[!is.na(get(groups))][[groups]])
+  setorderv(dt, cols = ranks[1], na.last = TRUE)
   consensus <- dt[!is.na(get(groups)), do.call(get_consistent_taxon, list(.SD, ranks, threshold, min.ids)), by = groups, .SDcols = ranks]
+  consensus <- consensus[match(group_order, consensus[[groups]])]
+
   # Convert discordant_ids to text if appropriate
   if (discord.format[1] == "text") {
     data.table::set(consensus,
