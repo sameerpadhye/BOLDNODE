@@ -21,15 +21,15 @@ The user manual for the package can be downloaded from the following link: (<htt
 
 ## Installation
 
-The package can be installed using `devtools::install_github` function from the `devtools` package in R (which first needs to be installed).
+The package can be installed from CRAN using `install.packages()`.
 
 ``` r
-devtools::install_github("https://github.com/sameerpadhye/BOLDNODE.git")
+install.packages('BOLDNODE')
 ```
 
 ## Downloading Data Packages
 
-Users need to log into BOLD (<https://bench.boldsystems.org/index.php/Login/page?destination=MAS_Management_UserConsole>) to download datasets in `parquet` format. Users can then directly use the file as input for the search and vocabulary functions.
+Users need to log in to BOLD (<https://bench.boldsystems.org/index.php/Login/page?destination=MAS_Management_UserConsole>) to download datasets in `parquet` format. Users can then directly use the file as input for the search and vocabulary functions.
 
 ## BOLDNODE has 12 functions:
 
