@@ -12,49 +12,64 @@ export(bold_search_collect)
 export(get_bin_consensus)
 export(get_bin_reps)
 export(get_concise_summary)
-importFrom(DBI,dbConnect)
-importFrom(DBI,dbExecute)
-importFrom(DBI,dbQuoteIdentifier)
-importFrom(data.table,as.data.table)
-importFrom(data.table,copy)
-importFrom(data.table,fcase)
-importFrom(data.table,fread)
-importFrom(data.table,set)
-importFrom(data.table,setnames)
-importFrom(dbplyr,remote_con)
-importFrom(dbplyr,sql)
-importFrom(dbplyr,sql_render)
-importFrom(dplyr,"%>%")
-importFrom(dplyr,across)
-importFrom(dplyr,all_of)
-importFrom(dplyr,any_of)
-importFrom(dplyr,between)
-importFrom(dplyr,bind_rows)
-importFrom(dplyr,case_when)
-importFrom(dplyr,collect)
-importFrom(dplyr,compute)
-importFrom(dplyr,count)
-importFrom(dplyr,distinct)
-importFrom(dplyr,everything)
-importFrom(dplyr,filter)
-importFrom(dplyr,matches)
-importFrom(dplyr,mutate)
-importFrom(dplyr,n)
-importFrom(dplyr,n_distinct)
-importFrom(dplyr,pull)
-importFrom(dplyr,rename)
-importFrom(dplyr,select)
-importFrom(dplyr,summarise)
-importFrom(dplyr,summarize)
-importFrom(dplyr,tbl)
-importFrom(progressr,progressor)
-importFrom(progressr,with_progress)
-importFrom(rlang,"!!")
-importFrom(rlang,.data)
-importFrom(rlang,sym)
+importFrom(DBI,
+  dbConnect,
+  dbExecute,
+  dbQuoteIdentifier
+)
+importFrom(data.table,
+  as.data.table,
+  copy,
+  fcase,
+  fread,
+  set,
+  setnames,
+  setorderv
+)
+importFrom(dbplyr,
+  remote_con,
+  sql,
+  sql_render
+)
+importFrom(dplyr,
+  "%>%",
+  across,
+  all_of,
+  any_of,
+  between,
+  bind_rows,
+  case_when,
+  collect,
+  compute,
+  count,
+  distinct,
+  everything,
+  filter,
+  matches,
+  mutate,
+  n,
+  n_distinct,
+  pull,
+  rename,
+  select,
+  summarise,
+  summarize,
+  tbl
+)
+importFrom(progressr,
+  progressor,
+  with_progress
+)
+importFrom(rlang,
+  "!!",
+  .data,
+  sym
+)
 importFrom(sf,st_as_sf)
 importFrom(stats,setNames)
-importFrom(tidyr,pivot_longer)
-importFrom(tidyr,pivot_wider)
+importFrom(tidyr,
+  pivot_longer,
+  pivot_wider
+)
 importFrom(tools,file_ext)
 importFrom(utils,head)

@@ -132,7 +132,7 @@ bcdm_to_occmatrix <- function(bold.search.res,
     )
   # if pre.abs = T
   if (pre.abs) {
-    occ.data.wide <- occ.data.wide %>%
+    occ.data <- occ.data %>%
       dplyr::mutate(
         dplyr::across(
           -1,

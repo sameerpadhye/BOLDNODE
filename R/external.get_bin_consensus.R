@@ -28,7 +28,7 @@
 #' @returns A table of consensus identifications for each BIN (or other grouping variable), with the following columns:
 #'    `bin_uri`, `member_count`, `concordant_rank`, `concordant_id`, `discordant_rank`, `discordant_ids`.
 #'
-#' @importFrom data.table as.data.table fcase setnames set copy
+#' @importFrom data.table as.data.table fcase setnames set copy setorderv
 #'
 #' @examples
 #' \dontrun{

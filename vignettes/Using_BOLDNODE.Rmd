@@ -436,7 +436,7 @@ DT::datatable(
 
 `bcdm_to_dnastringset` converts the search results into a `DNAStringSet` object. First, `bold_parquet_search` is used to filter the COI-5P *Clytus* records from Canada. Additional search parameters are put in to return only full length barcodes having very low (or none) ambiguous bases (**Only top three results displayed**) (*Please note: The* `bcdm_to_dnastringset` *function requires* `Biostrings` *to be installed before use*).
 
-```{r DNAStringSet-object,message=F,warning=F}
+```{r DNAStringSet-object,message=F,warning=F,eval=requireNamespace("Biostrings",quietly=TRUE)}
 library(Biostrings)
 # Filter for genus Clytus
 clytus_search <- bold_parquet_search(
@@ -459,7 +459,7 @@ head(clytus_data, 3)
 
 #### 7a. Obtain base proportions from the sequences (using external package `Biostrings`)
 
-```{r basepair-freq,message=F,warning=F}
+```{r basepair-freq,message=F,warning=F,eval=requireNamespace("Biostrings",quietly=TRUE)}
 library(Biostrings)
 # Count bases across all sequences
 base_counts <- colSums(alphabetFrequency(clytus_data, baseOnly = TRUE))
@@ -470,7 +470,7 @@ base_props
 
 #### 7b. Multiple sequence alignment using 'Muscle' (using external packages `muscle` and `Biostrings`)
 
-```{r sequence_alignment,message=F,warning=F}
+```{r sequence_alignment,message=F,warning=F,eval=requireNamespace("muscle",quietly=TRUE)}
 library(Biostrings)
 library(muscle)
 alignment_muscle <- muscle(clytus_data)
@@ -478,7 +478,7 @@ alignment_muscle <- muscle(clytus_data)
 
 ##### 7c. NJ tree visualization of the alignment (using external package `ape` and `phangorn`)
 
-```{r NJ tree,message=F,warning=F,fig.width=12, fig.height=12, dpi=300}
+```{r NJ tree,message=F,warning=F,eval=requireNamespace("muscle",quietly=TRUE),fig.width=12, fig.height=12, dpi=300}
 library(ape)
 library(phangorn)
 # Convert the alignment to DNABin

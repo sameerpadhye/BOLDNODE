@@ -1,6 +1,6 @@
 Package: BOLDNODE
 Title: Search and Explore BOLD Data Packages Efficiently
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
     person("Sameer", "Padhye", , "spadhye@uoguelph.ca", role = c("aut", "cre")),
     person(c("Spencer", "K."), "Monckton", , "smonckto@uoguelph.ca", role = "aut"),
@@ -22,7 +22,7 @@ Imports:
     DBI,
     dbplyr,
     dplyr,
-    duckdb,
+    duckdb (>= 1.5.5),
     progressr,
     rlang,
     sf,
@@ -42,6 +42,5 @@ Suggests:
     phangorn,
     tibble,
     vegan
-Config/roxygen2/version: 8.0.0
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.1.0
 VignetteBuilder: knitr

@@ -246,7 +246,7 @@ bold.search.filters <- function(bold.df,
         ARRAY_LENGTH(
           ARRAY_FILTER(
             REGEXP_SPLIT_TO_ARRAY(UPPER(nuc), ''),
-            x -> REGEXP_MATCHES(x, '[NRYSWKMBDHV]')
+            LAMBDA x: REGEXP_MATCHES(x, '[NRYSWKMBDHV]')
           ))"),
         percent_ambi = (count_ambi * 100.0 / nuc_basecount)
       ) %>%
