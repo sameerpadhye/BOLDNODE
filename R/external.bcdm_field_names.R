@@ -21,7 +21,7 @@
 #' @export
 #'
 bcdm_field_names <- function(print.output = FALSE) {
-  bold.fields.data <- suppressMessages(data.table::fread("https://raw.githubusercontent.com/boldsystems-central/BCDM/refs/heads/main/field_definitions.tsv",
+  bold.fields.data <- suppressMessages(data.table::fread(bcdm_file("field_definitions.tsv"),
     sep = "\t",
     quote = "",
     check.names = FALSE,

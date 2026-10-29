@@ -1,0 +1,72 @@
+bcdm_field	dwc_field	bcdm_type	bcdm_format	dwc_format	dwc_type
+processid	materialSampleID	string	default	default	string
+sampleid	recordNumber	string	default	default	string
+fieldid	fieldNumber	string	default	default	string
+museumid	catalogNumber	string	default	default	string
+record_id		string	default		
+specimenid	occurrenceID	integer	default	default	integer
+processid_minted_date		string:date	%Y-%m-%d		
+bin_uri	measurementMethod	string	BOLD:%s	BOLD:%s	string
+bin_created_date		string:date	%Y-%m-%d		
+collection_code	collectionCode	string	default	default	string
+inst	institutionCode	string	default	default	string
+taxid		number	default		
+kingdom	kingdom	string	default	default	string
+phylum	phylum	string	default	default	string
+class	class	string	default	default	string
+order	order	string	default	default	string
+family	family	string	default	default	string
+subfamily	subfamily	string	default	default	string
+tribe	tribe	string	default	default	string
+genus	genus	string	default	default	string
+species	scientificName	string	default	default	string
+subspecies	subpecies	string	default	default	string
+species_reference	scientificNameAuthorship	string	default	default	string
+identification		string	default		
+identification_method	identificationRemarks	string	default	default	string
+identification_rank		string	default		
+identified_by	identifiedBy	string	default	default	string
+taxonomy_notes		string	default		
+sex	sex	char	default	{"M":"male","F":"female","H":"hermaphrodite"}	string
+reproduction		string	default		
+life_stage	lifeStage	string	default	default	string
+short_note	occurrenceRemarks	string	default	default	string
+notes	organismRemarks	string	default	default	string
+voucher_type	typeStatus	string	default	default	string
+tissue_type	MaterialSample	string	default	default	string
+specimen_linkout		string	default		
+associated_specimens	associatedOccurrences	string	default	default	string
+associated_taxa	associatedTaxa	string	default	default	string
+collectors	recordedBy	string	default	default	string
+collection_date_start	eventDate	string:date	%Y-%m-%d	%Y-%m-%d	string:date
+collection_date_end		integer	default	default	integer
+collection_event_id	eventID	string	default	default	string
+collection_time	eventTime	string	default	default	string
+collection_notes	fieldNotes	string	default	default	string
+geoid		integer	default		
+country/ocean	country/waterBody	string	default	default	string
+country_iso	countryCode	string	default	default	string
+province/state	stateProvince	string	default	default	string
+region	county	string	default	default	string
+sector	municipality	string	default	default	string
+site	verbatimLocality	string	default	default	string
+site_code	parentEventID	string	default	default	string
+coord	decimalLatitude & decimalLongitude	string	default	default	array
+coord_accuracy	coordinatePrecision	float	default	default	float
+coord_source	georeferenceSources	string	default	default	string
+elev	verbatimElevation	float	default	default	float
+elev_accuracy		float	default		
+depth	verbatimDepth	string	default	default	string
+depth_accuracy		float	default		
+habitat	habitat	string	default	default	string
+sampling_protocol	samplingProtocol	string	default	default	string
+nuc	dynamicProperties	string	default	default	string
+nuc_basecount		integer	default		
+insdc_acs		string	default		
+funding_src		string	default		
+marker_code		string	default		
+primers_forward		array	default		
+primers_reverse		array	default		
+sequence_run_site	measurementDeterminedBy	string	default	default	string
+sequence_upload_date	measurementDeterminedDate	string:date	%Y-%m-%d	%Y-%m-%d	string:date
+recordset_code_arr	datasetName	array	default	BOLD_DATASET_CODES:%s	string

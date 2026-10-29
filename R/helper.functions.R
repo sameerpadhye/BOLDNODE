@@ -10,7 +10,7 @@ import_parquet_data <- function(path) {
   # 1 Establish a temporary connection
   temp_connection <- DBI::dbConnect(duckdb::duckdb())
   # 2 Create a query
-  get_parquet_data <- sprintf("Select * from parquet_scan('%s')", path)
+  get_parquet_data <- paste0("SELECT * FROM parquet_scan(", DBI::dbQuoteString(temp_connection, path), ")")
   parquet_data <- tbl(
     temp_connection,
     sql(get_parquet_data)
@@ -227,7 +227,8 @@ bold.search.filters <- function(bold.df,
   }
   # 12 Dataset or project code
   if (!is.null(dataset.projects)) {
-    codes_regex <- paste(dataset.projects, collapse = "|")
+    escaped_codes <- gsub("([][{}()+*^$|\\\\?.-])", "\\\\\\1", trimws(dataset.projects))
+    codes_regex <- paste0("(^|,)(", paste(escaped_codes, collapse = "|"), ")(,|$)")
     bold.df <- bold.df %>%
       mutate(
         bold_recordset_code_arr = regexp_replace(bold_recordset_code_arr, "\\[|\\]", "")
@@ -260,7 +261,6 @@ bold.search.filters <- function(bold.df,
 }
 
 # 4 Chunked data indices
-
 get_chunk_indices <- function(input_file,
                               chunksize = 100000) {
   chunk_size <- chunksize
@@ -282,11 +282,9 @@ get_chunk_indices <- function(input_file,
 }
 
 # 5 Regular expression for interim names
-
 re_int <- "\\.\\Z|\\S{2,}\\.\\S|[0-9]|\\s[A-Z]|[A-Z]\\Z|[A-Z]{2}|[a-z][A-Z]|_(?!(hn|sl|ss)\\Z)|%|\\?|!|\\[|\\]|\\{|\\}|\\(|\\)|,|\\s(?:aff|agg|cf|complex|group|grp|gr|gp|cmplx|pr|ms|cfr|nr|nsp|near|nomen|hybrid|voucher|form|from|ss|ssl|see|spp?|sample)\\.?(?:\\s|\\Z)"
 
 # 6 Select BIN reps from `tbl_sql` using DBI & dbplyr
-
 get_sql_sort <- function(df, criteria) {
   make_sort_key <- function(col, levels = NULL, grepl_pat = NULL) {
     col_sym <- sym(col)
@@ -379,7 +377,6 @@ get_sql_sort <- function(df, criteria) {
 }
 
 # 7 Select BIN reps from data in memory using data.table
-
 get_dt_sort <- function(dt, criteria) {
   lapply(names(criteria), function(step) {
     if (step == "vouchered") {
@@ -416,4 +413,30 @@ get_dt_sort <- function(dt, criteria) {
       dt$sequence_upload_date
     }
   })
+}
+
+# 8 Cache a local copy of BCDM reference files (field_definitions.tsv, mapping_BCDM_to_DWC.tsv)
+bcdm_paths <- new.env(parent = emptyenv())
+# files are checked once per session and refreshed from GitHub at most every `max_age_days`
+bcdm_file <- function(name, max_age_days = 7, timeout = 5) {
+  if (!is.null(bcdm_paths[[name]])) return(bcdm_paths[[name]])
+  shipped <- system.file("extdata", name, package = "BOLDNODE", mustWork = TRUE)
+  cached <- file.path(tools::R_user_dir("BOLDNODE", "cache"), name)
+  age <- if (file.exists(cached)) difftime(Sys.time(), file.mtime(cached), units = "days") else Inf
+  if (age >= max_age_days && !isTRUE(getOption("BOLDNODE.offline"))) {
+    url <- paste0("https://raw.githubusercontent.com/boldsystems-central/BCDM/refs/heads/main/", name)
+    tmp <- tempfile(fileext = ".tsv")
+    old <- options(timeout = timeout)
+    on.exit({ options(old); unlink(tmp) }, add = TRUE)
+    ok <- tryCatch(utils::download.file(url, tmp, quiet = TRUE, mode = "wb") == 0,
+                   error = function(e) FALSE, warning = function(w) FALSE)
+    # keep the new copy only if it looks like the table (not, e.g., an error page)
+    if (ok && isTRUE(tryCatch(nrow(data.table::fread(tmp, sep = "\t", quote = "", fill = TRUE, showProgress = FALSE)) > 0,
+                              error = function(e) FALSE))) {
+      file.copy(tmp, cached, overwrite = TRUE)
+    }
+  }
+  path <- if (file.exists(cached) && bcdm_file_ok(cached, shipped)) cached else shipped
+  bcdm_paths[[name]] <- path
+  path
 }

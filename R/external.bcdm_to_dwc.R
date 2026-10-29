@@ -50,9 +50,7 @@ bcdm_to_dwc <- function(bold.search.res) {
     stop("Please check if all the BCDM fields are present in the data")
   }
   # BOLD to BCDM mapping with certain updates for some field name mappings
-  bcdm_path <- "https://raw.githubusercontent.com/boldsystems-central/BCDM/refs/heads/main/mapping_BCDM_to_DWC.tsv"
-
-  bold.2.bcdm <- suppressMessages(data.table::fread(bcdm_path,
+  bold.2.bcdm <- suppressMessages(data.table::fread(bcdm_file("mapping_BCDM_to_DWC.tsv"),
     sep = "\t",
     quote = "",
     check.names = FALSE,
