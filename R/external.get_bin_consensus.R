@@ -87,16 +87,23 @@ get_bin_consensus <- function(
     "`min.ids` must be either a single number, a vector of unnamed numbers equal in length to `ranks`, or a named list or vector of numbers with names corresponding to ranks." = ((length(min.ids) == 1) | (length(min.ids) == length(ranks)) | (!is.null(names(min.ids)))),
     '`discord.format` must be one of "list" or "text".' = all(discord.format %in% c("list", "text"))
   )
+  # Check that data has BIN assignments
+  with_bins <- if (is_tbl_sql) {
+    bold.search.res %>%
+      dplyr::filter((!is.na(bin_uri)) & (bin_uri != ""))
+  } else {
+    as.data.table(copy(bold.search.res))[(!is.na(bin_uri)) & (bin_uri != ""),]
+  }
+  stopifnot("Provided data has no records with assigned BINs." = length(pull(head(with_bins, 1), 1)) > 0)
   # Collect into data.frame if needed, then create a data.table copy of the data
   dt <- if (is_tbl_sql) {
-    bold.search.res %>%
-      dplyr::filter((!is.na(bin_uri)) & (bin_uri != "")) %>%
+    with_bins %>%
       dplyr::select(all_of(c(groups, ranks))) %>%
       collect() %>%
       as.data.table() %>%
       copy()
   } else {
-    as.data.table(copy(bold.search.res))
+    with_bins[, .SD, .SDcols = c(groups, ranks)]
   }
   # Parse threshold & min.ids parameters and align them with ranks
   parse_param_vector <- function(param) {

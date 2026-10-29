@@ -211,6 +211,14 @@ get_bin_reps <- function(
       seq_date = "latest"
     )
   }
+  # Filter data to records with BIN assignments
+  with_bins <- if (is_tbl_sql) {
+    bold.search.res %>%
+      dplyr::filter((!is.na(bin_uri)) & (bin_uri != ""))
+  } else {
+    as.data.table(copy(bold.search.res))[(!is.na(bin_uri)) & (bin_uri != ""),]
+  }
+  stopifnot("Provided data has no records with assigned BINs." = length(pull(head(with_bins, 1), 1)) > 0)
   # Default BOLD ranks
   ranks <- c("kingdom", "phylum", "class", "order", "family", "subfamily", "tribe", "genus", "species", "subspecies")
   # Define grouping columns
@@ -224,18 +232,17 @@ get_bin_reps <- function(
   # Deduce specimen identifier
   id_col <- intersect(
     c("processid", "sampleid", "fieldid", "museumid", "record_id", "specimenid"),
-    colnames(bold.search.res)
+    colnames(with_bins)
   )[[1]]
   # Proceed according to input object type
   bin_reps <- if (is_tbl_sql) {
     # Shuffle data to randomize representative order, or set pre-determined order using random seed
     df_shuffle <- if (!is.null(seed)) {
-      bold.search.res %>% dplyr::mutate(.rand = md5(paste0(!!sym(id_col), !!as.character(seed))))
+      with_bins %>% dplyr::mutate(.rand = md5(paste0(!!sym(id_col), !!as.character(seed))))
     } else {
-      bold.search.res %>% dplyr::mutate(.rand = random())
+      with_bins %>% dplyr::mutate(.rand = random())
     }
     df_shuffle <- df_shuffle %>%
-      dplyr::filter(!is.na(bin_uri)) %>%
       dplyr::filter(marker_code == "COI-5P") %>%
       dplyr::distinct(!!sym(id_col), .keep_all = TRUE)
     # Build sequence of sort keys to use in query
@@ -363,8 +370,8 @@ get_bin_reps <- function(
   } else { # If local data is supplied, select BIN reps from there
     # Randomize representative order (using random seed for pre-determined order if provided)
     if (!is.null(seed)) set.seed(seed)
-    data <- as.data.table(bold.search.res)[sample(nrow(bold.search.res))]
-    data <- unique(data[!is.na(bin_uri) & (bin_uri != "") & (marker_code == "COI-5P")], by = id_col)
+    data <- as.data.table(with_bins)[sample(nrow(with_bins))]
+    data <- unique(data[marker_code == "COI-5P",], by = id_col)
     # Filter by identification if applicable
     if (by.taxon) {
       # Move interim names to the bottom (they may still be selected if they match other criteria)
