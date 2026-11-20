@@ -1,6 +1,6 @@
 Package: BOLDNODE
 Title: Search and Explore BOLD Data Packages Efficiently
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(
     person("Sameer", "Padhye", , "spadhye@uoguelph.ca", role = c("aut", "cre")),
     person(c("Spencer", "K."), "Monckton", , "smonckto@uoguelph.ca", role = "aut"),
