@@ -417,7 +417,14 @@ get_dt_sort <- function(dt, criteria) {
 
 # 8 Cache a local copy of BCDM reference files (field_definitions.tsv, mapping_BCDM_to_DWC.tsv)
 bcdm_paths <- new.env(parent = emptyenv())
-# files are checked once per session and refreshed from GitHub at most every `max_age_days`
+# Small helper to verify that the fetched reference file columns match at least some of those in the bundled copy
+bcdm_file_ok <- function(file, shipped) {
+  head_of <- function(f) tryCatch(data.table::fread(f, sep = "\t", quote = "", nrows = 1, fill = TRUE, showProgress = FALSE),
+                                  error = function(e) NULL)
+  new <- head_of(file)
+  !is.null(new) && nrow(new) > 0 && any(names(head_of(shipped)) %in% names(new))
+}
+# Files are checked once per session and refreshed from GitHub at most every `max_age_days`
 bcdm_file <- function(name, max_age_days = 7, timeout = 5) {
   if (!is.null(bcdm_paths[[name]])) return(bcdm_paths[[name]])
   shipped <- system.file("extdata", name, package = "BOLDNODE", mustWork = TRUE)
