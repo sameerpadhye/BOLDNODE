@@ -1,3 +1,13 @@
+# BOLDNODE 1.0.2
+## Bug Fixes
+- `bold_parquet_search()`, `bcdm_field_values()`: Data package paths containing an apostrophe no longer break the search.
+- `bold_parquet_search()`: `dataset.projects` now matches whole codes (`DS-ABC` no longer matches `DS-ABCD`) and codes with special characters no longer cause errors.
+- `get_bin_consensus()`, `get_bin_reps()`: Now stop with a clear message when the data has no records with BINs.
+## Improvements
+- `bcdm_field_names()`, `bcdm_to_dwc()`: BCDM reference tables are now shipped with the package and used when offline (a cached copy is refreshed from GitHub weekly). Set `options(BOLDNODE.offline = TRUE)` to skip the online check.
+## Documentation
+- `Using_BOLDNODE` vignette: Skip the `muscle` alignment and NJ tree chunks unless the required packages are available.
+
 # BOLDNODE 1.0.1
 ## Bug Fixes
 - `bcdm_to_occmatrix()`: Fixed `pre.abs = TRUE` by correcting the object used for presence/absence conversion.
