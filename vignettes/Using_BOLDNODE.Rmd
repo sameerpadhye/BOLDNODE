@@ -159,7 +159,7 @@ As a case study, we use Canadian **Cerambycidae** (longhorn beetles) to illustra
 
 ## Installing and importing `BOLDNODE` and other packages
 
-The latest (in development) version of `BOLDNODE` can be installed via `pak`. Packages like `Biostrings` require `BiocManager` since they are hosted by **Bioconductor**.
+The latest (in development) version of `BOLDNODE` can be installed via `pak`. Packages like `Biostrings` require `BiocManager` since they are hosted by **Bioconductor**. The sequence alignment step (7b) additionally needs the Bioconductor package `MultipleAlignment` (`BiocManager::install("MultipleAlignment")`) when using Bioconductor 3.24 or later; the alignment and tree chunks are skipped if it is not installed.
 
 ```{r install packages,message=F,warning=F,echo=FALSE,include=F}
 # CRAN packages
@@ -468,9 +468,9 @@ base_props <- base_counts / sum(base_counts)
 base_props
 ```
 
-#### 7b. Multiple sequence alignment using 'Muscle' (using external packages `muscle` and `Biostrings`)
+#### 7b. Multiple sequence alignment using 'Muscle' (using external packages `muscle`, `Biostrings` and `MultipleAlignment`; the last is required by `Biostrings` for Bioconductor 3.24 or later)
 
-```{r sequence_alignment,message=F,warning=F,eval=requireNamespace("muscle",quietly=TRUE)&&requireNamespace("Biostrings",quietly=TRUE)}
+```{r sequence_alignment,message=F,warning=F,eval=requireNamespace("muscle",quietly=TRUE)&&requireNamespace("Biostrings",quietly=TRUE)&&requireNamespace("MultipleAlignment",quietly=TRUE)}
 library(Biostrings)
 library(muscle)
 alignment_muscle <- muscle(clytus_data)
@@ -478,7 +478,7 @@ alignment_muscle <- muscle(clytus_data)
 
 ##### 7c. NJ tree visualization of the alignment (using external package `ape` and `phangorn`)
 
-```{r NJ tree,message=F,warning=F,eval=requireNamespace("muscle",quietly=TRUE)&&requireNamespace("Biostrings",quietly=TRUE),fig.width=12, fig.height=12, dpi=300}
+```{r NJ tree,message=F,warning=F,eval=requireNamespace("muscle",quietly=TRUE)&&requireNamespace("Biostrings",quietly=TRUE)&&requireNamespace("MultipleAlignment",quietly=TRUE),fig.width=12, fig.height=12, dpi=300}
 library(ape)
 library(phangorn)
 # Convert the alignment to DNABin

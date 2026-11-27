@@ -7,6 +7,7 @@
 - `bcdm_field_names()`, `bcdm_to_dwc()`: BCDM reference tables are now shipped with the package and used when offline (a cached copy is refreshed from GitHub weekly). Set `options(BOLDNODE.offline = TRUE)` to skip the online check.
 ## Documentation
 - `Using_BOLDNODE` vignette: Skip the `muscle` alignment and NJ tree chunks unless the required packages are available.
+- `Using_BOLDNODE` vignette: The `muscle` alignment and NJ tree chunks now also require the `MultipleAlignment` package (needed by `Biostrings::DNAMultipleAlignment()` in Bioconductor 3.24 or later), fixing the vignette re-build error on r-devel.
 
 # BOLDNODE 1.0.1
 ## Bug Fixes
